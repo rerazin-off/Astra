@@ -1,9 +1,15 @@
-from django.contrib import admin
-from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path, include
 
+from django.urls import path
+from . import views  # Импорт представлений из текущего приложения
+
+# Пространство имен для URL-шаблонов приложения
+# Позволяет использовать 'books:book_list' в шаблонах и представлениях
+app_name = 'module_project'
+
+# Список всех URL-маршрутов приложения
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('Astra.urls')),
+    # Главная страница
+    path('', views.home, name='home'),
+    # Пример использования в шаблоне: {% url 'books:home' %}
+    
 ]
