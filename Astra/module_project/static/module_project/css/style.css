@@ -1,0 +1,330 @@
+/* ============================================
+   Космическая ККИ - Основные стили
+   ============================================ */
+
+/* ---------- Глобальные стили ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    min-height: 100vh;
+}
+
+/* ---------- Анимации ---------- */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+/* ---------- Навигация ---------- */
+.navbar-custom {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.navbar-custom .navbar-brand {
+    color: white !important;
+    font-weight: bold;
+}
+
+.nav-link {
+    color: white !important;
+    transition: opacity 0.2s;
+}
+
+.nav-link:hover {
+    opacity: 0.8;
+}
+
+/* ---------- Карточки и контейнеры ---------- */
+.sidebar, 
+.stat-card, 
+.profile-card,
+.register-card,
+.login-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s, background 0.3s;
+}
+
+.sidebar:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+}
+
+.profile-card,
+.register-card,
+.login-card {
+    padding: 40px;
+}
+
+.register-card,
+.login-card {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.register-header,
+.login-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.register-body,
+.login-body {
+    padding: 40px;
+}
+
+/* ---------- Карточки очков ---------- */
+.points-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* ---------- Кнопки ---------- */
+.btn-action,
+.btn-register,
+.btn-login,
+.btn-save {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-action:hover,
+.btn-register:hover,
+.btn-login:hover,
+.btn-save:hover {
+    transform: translateY(-2px);
+    color: white;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-register,
+.btn-login {
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.btn-save {
+    padding: 12px 30px;
+    font-weight: bold;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 10px;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+/* ---------- Формы ---------- */
+.form-control {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 15px;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    background: white;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* ---------- Бейджи ---------- */
+.victory-badge {
+    background: #28a745;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.defeat-badge {
+    background: #dc3545;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* ---------- История и элементы списка ---------- */
+.history-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+}
+
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Аватар пользователя ---------- */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+/* ---------- Иконки и анимации ---------- */
+.welcome-icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* ---------- Алерты ---------- */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: #333;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #0dcaf0 100%);
+    color: white;
+}
+
+/* ---------- Текст и типографика ---------- */
+.opacity-75 {
+    opacity: 0.75;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ---------- Утилиты ---------- */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* ---------- Адаптивность ---------- */
+@media (max-width: 768px) {
+    .register-body,
+    .login-body,
+    .profile-card {
+        padding: 20px;
+    }
+    
+    .stat-card {
+        margin-bottom: 15px;
+    }
+    
+    .display-5 {
+        font-size: 2rem;
+    }
+    
+    .navbar-custom .container-fluid {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-action {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .register-header h2,
+    .login-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .points-card h2 {
+        font-size: 1.8rem;
+    }
+}

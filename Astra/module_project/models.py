@@ -5,6 +5,58 @@ from django.utils import timezone
 
 # Create your models here.
 
+class Attribute(models.Model):
+    """
+    Модель атрибутов карточек (стихии/типы)
+    """
+    name = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name="Название атрибута"
+    )
+    
+    icon = models.ImageField(
+        upload_to='attributes_icons/',
+        verbose_name="Иконка атрибута",
+        blank=True,
+        null=True
+    )
+    
+    color = models.CharField(
+        max_length=7,
+        default="#FFFFFF",
+        verbose_name="Цвет атрибута в HEX",
+        help_text="Например: #FF0000 для красного"
+    )
+    
+    strength_bonus = models.FloatField(
+        default=1.0,
+        verbose_name="Бонус к силе",
+        help_text="Множитель силы для карт этого атрибута"
+    )
+    
+    order = models.IntegerField(
+        default=0,
+        verbose_name="Порядок сортировки"
+    )
+    
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активен"
+    )
+    
+    class Meta:
+        verbose_name = "Атрибут"
+        verbose_name_plural = "Атрибуты"
+        ordering = ['order', 'name']
+    
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.color.startswith('#'):
+            self.color = '#' + self.color
+        super().save(*args, **kwargs)
 class Users_System(models.Model):
     """
     Модель для хранения информации о пользователях.
@@ -124,11 +176,13 @@ class Cards(models.Model):
         blank=True,
         validators=[MinValueValidator(0), MaxValueValidator(9999)]
     )
-    attribute = models.CharField(
-        max_length=100,
-        verbose_name="Атрибут карточки",
+    attribute = models.ForeignKey(
+        Attribute, # type: ignore
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
-        null=True
+        related_name='cards',
+        verbose_name="Атрибут карточки"
     )
     
     rarity = models.ForeignKey(

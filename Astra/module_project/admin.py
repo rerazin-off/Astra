@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Users_System, Rarity, Cards, User_Inventory, Battle_History, Gacha_History
+from .models import Users_System, Rarity, Cards, User_Inventory, Battle_History, Gacha_History,Attribute
 
 @admin.register(Users_System)
 class Users_SystemAdmin(admin.ModelAdmin):
@@ -16,13 +16,13 @@ class RarityAdmin(admin.ModelAdmin):
 
 @admin.register(Cards)
 class CardsAdmin(admin.ModelAdmin):
-    list_display = ['title', 'rarity', 'strenth', 'health', 'defence', 'author', 'is_active']
+    list_display = ['title', 'rarity', 'attribute', 'strenth', 'health', 'defence', 'author', 'is_active']
     list_filter = ['rarity', 'attribute', 'is_active', 'author']
     search_fields = ['title', 'description']
     readonly_fields = ['created_at']
     
     def save_model(self, request, obj, form, change):
-        if not change:  # Если создается новая карточка
+        if not change:
             obj.author = request.user
         super().save_model(request, obj, form, change)
 
@@ -43,3 +43,21 @@ class Gacha_HistoryAdmin(admin.ModelAdmin):
     list_display = ['user', 'card', 'points_spent', 'obtained_at']
     list_filter = ['obtained_at']
     search_fields = ['user__nikname', 'card__title']
+
+@admin.register(Attribute)
+class AttributeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'color', 'strength_bonus', 'order', 'is_active']
+    list_editable = ['order', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name']
+    ordering = ['order', 'name']
+    
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('name', 'icon', 'color', 'is_active')
+        }),
+        ('Игровые параметры', {
+            'fields': ('strength_bonus', 'order'),
+            'description': 'Настройки влияющие на геймплей'
+        }),
+    )
