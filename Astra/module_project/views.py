@@ -1,11 +1,14 @@
 
-from django.shortcuts import render, redirect
+from gettext import translation
+
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
-from .models import Users_System, User_Inventory, Cards
-from .forms import UsersSystemForm, UserProfileForm, AddPointsForm
-
+from django.db.models import Q
+from .models import Users_System, User_Inventory, Cards, Rarity, Gacha_History, Attribute
+from .forms import UsersSystemForm, UserProfileForm, AddPointsForm, CardForm, GachaForm
+import random
 def home(request):
     """Временная заглушка для главной страницы"""
     return HttpResponse("""
@@ -127,17 +130,205 @@ def profile_edit(request):
     
     return render(request, 'module_project/profile_edit.html', {'form': form, 'user': user})
 
+def create_card(request):
+    """Создание новой карточки"""
+    if 'user_id' not in request.session:
+        messages.warning(request, 'Войдите в систему')
+        return redirect('module_project:login')
+    
+    user = Users_System.objects.get(id=request.session['user_id'])
+    
+    if request.method == 'POST':
+        form = CardForm(request.POST, request.FILES)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.author = user
+            card.save()
+            messages.success(request, f'Карточка "{card.title}" успешно создана!')
+            return redirect('module_project:card_detail', card_id=card.id)
+    else:
+        form = CardForm()
+    
+    return render(request, 'module_project/create_card.html', {'form': form})
+
 def card_catalog(request):
-    return HttpResponse("Каталог карточек - в разработке")
+    """Каталог всех карточек"""
+    cards = Cards.objects.filter(is_active=True).select_related('rarity', 'attribute', 'author')
+    
+    # Фильтрация
+    rarity_id = request.GET.get('rarity')
+    attribute_id = request.GET.get('attribute')
+    search = request.GET.get('search', '')
+    
+    if rarity_id:
+        cards = cards.filter(rarity_id=rarity_id)
+    if attribute_id:
+        cards = cards.filter(attribute_id=attribute_id)
+    if search:
+        cards = cards.filter(Q(title__icontains=search) | Q(description__icontains=search))
+    
+    rarities = Rarity.objects.all()
+    attributes = Attribute.objects.filter(is_active=True)
+    
+    context = {
+        'cards': cards,
+        'rarities': rarities,
+        'attributes': attributes,
+    }
+    return render(request, 'module_project/card_catalog.html', context)
 
 def card_detail(request, card_id):
-    return HttpResponse(f"Детальная информация о карточке {card_id} - в разработке")
+    """Детальная информация о карточке"""
+    card = get_object_or_404(Cards, id=card_id)
+    
+    # Проверяем, есть ли у пользователя эта карточка
+    has_card = False
+    if 'user_id' in request.session:
+        has_card = User_Inventory.objects.filter(
+            user_id=request.session['user_id'],
+            card=card
+        ).exists()
+    
+    context = {
+        'card': card,
+        'has_card': has_card,
+    }
+    return render(request, 'module_project/card_detail.html', context)
+def gacha(request):
+    """Система гачи (выбивание карточек)"""
+    if 'user_id' not in request.session:
+        messages.warning(request, 'Войдите в систему')
+        return redirect('module_project:login')
+    
+    user = Users_System.objects.get(id=request.session['user_id'])
+    form = GachaForm()
+    
+    if request.method == 'POST':
+        form = GachaForm(request.POST)
+        if form.is_valid():
+            gacha_type = form.cleaned_data['gacha_type']
+            
+            # Определяем количество открытий и стоимость
+            if gacha_type == 'single':
+                pulls = 1
+                cost = 100
+            else: 
+                pulls = 10
+                cost = 1000
+            
+            if user.current_points < cost:
+                messages.error(request, f'Недостаточно очков! Нужно {cost}, у вас {user.current_points}')
+                return redirect('module_project:gacha')
+            
+            available_cards = Cards.objects.filter(is_active=True).select_related('rarity')
+            
+            if not available_cards.exists():
+                messages.error(request, 'Нет доступных карточек для открытия')
+                return redirect('module_project:gacha')
+            
+            cards_with_weights = []
+            for card in available_cards:
+                weight = card.rarity.multiplier if card.rarity else 1.0
+                cards_with_weights.append((card, weight))
+            
+            user.current_points -= cost
+            user.save()
+            
+            obtained_cards = []
+            with translation.atomic():
+                for _ in range(pulls):
+                    card = random.choices(
+                        [c[0] for c in cards_with_weights],
+                        weights=[c[1] for c in cards_with_weights]
+                    )[0]
+                    
+                    inventory_item, created = User_Inventory.objects.get_or_create(
+                        user=user,
+                        card=card,
+                        defaults={'quantity': 1}
+                    )
+                    
+                    if not created:
+                        inventory_item.quantity += 1
+                        inventory_item.save()
+                    
+                    Gacha_History.objects.create(
+                        user=user,
+                        card=card,
+                        points_spent=cost // pulls
+                    )
+                    
+                    obtained_cards.append(card)
+            
+            unique_cards = set(obtained_cards)
+            new_cards = [card for card in obtained_cards if obtained_cards.count(card) == 1]
+            
+            if pulls == 1:
+                card = obtained_cards[0]
+                messages.success(request, f'Вы получили: {card.title} ({card.rarity.name if card.rarity else "Обычная"})!')
+            else:
+                messages.success(request, f'Открыто {pulls} карточек! Новых: {len(new_cards)}, всего уникальных: {len(unique_cards)}')
+            
+            request.session['last_gacha_result'] = {
+                'cards': [{'id': c.id, 'title': c.title, 'rarity': c.rarity.name if c.rarity else 'Обычная', 
+                          'cover_image': c.cover_image.url if c.cover_image else None} 
+                         for c in obtained_cards],
+                'cost': cost,
+                'pulls': pulls
+            }
+            
+            return redirect('module_project:gacha_result')
+    
+    gacha_history = Gacha_History.objects.filter(user=user).select_related('card')[:20]
+    
+    context = {
+        'form': form,
+        'user': user,
+        'gacha_history': gacha_history,
+    }
+    return render(request, 'module_project/gacha.html', context)
+
+def gacha_result(request):
+    """Страница с результатами гачи"""
+    if 'user_id' not in request.session:
+        return redirect('module_project:login')
+    
+    result = request.session.get('last_gacha_result')
+    if not result:
+        return redirect('module_project:gacha')
+    
+    del request.session['last_gacha_result']
+    
+    return render(request, 'module_project/gacha_result.html', {'result': result})
 
 def my_collection(request):
-    return HttpResponse("Моя коллекция - в разработке")
-
-def create_card(request):
-    return HttpResponse("Создание карточки - в разработке")
+    """Моя коллекция карточек"""
+    if 'user_id' not in request.session:
+        return redirect('module_project:login')
+    
+    user = Users_System.objects.get(id=request.session['user_id'])
+    inventory = User_Inventory.objects.filter(user=user).select_related('card__rarity', 'card__attribute')
+    
+    rarity_id = request.GET.get('rarity')
+    attribute_id = request.GET.get('attribute')
+    favorite_only = request.GET.get('favorite') == 'on'
+    
+    if rarity_id:
+        inventory = inventory.filter(card__rarity_id=rarity_id)
+    if attribute_id:
+        inventory = inventory.filter(card__attribute_id=attribute_id)
+    if favorite_only:
+        inventory = inventory.filter(is_favorite=True)
+    
+    rarities = Rarity.objects.all()
+    attributes = Attribute.objects.filter(is_active=True)
+    
+    context = {
+        'inventory': inventory,
+        'rarities': rarities,
+        'attributes': attributes,
+    }
+    return render(request, 'module_project/my_collection.html', context)
 
 def edit_card(request, card_id):
     return HttpResponse(f"Редактирование карточки {card_id} - в разработке")

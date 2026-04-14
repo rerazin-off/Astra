@@ -1,8 +1,7 @@
-/* ============================================
-   Космическая ККИ - Основные стили
-   ============================================ */
+/* =========================================
+   COSMIC GACHA STYLE (КРАСИВЫЙ И БЕЗОПАСНЫЙ)
+   ========================================= */
 
-/* ---------- Глобальные стили ---------- */
 * {
     margin: 0;
     padding: 0;
@@ -10,321 +9,642 @@
 }
 
 body {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at top, #1a0033, #050010 80%);
+    font-family: 'Segoe UI', sans-serif;
     color: white;
     min-height: 100vh;
 }
 
-/* ---------- Анимации ---------- */
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+/* звёздный фон */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url("https://www.transparenttextures.com/patterns/stardust.png");
+    opacity: 0.2;
+    z-index: -1;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* свечение */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(140,0,255,0.2), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255,0,200,0.15), transparent 40%);
+    z-index: -1;
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
-}
-
-/* ---------- Навигация ---------- */
-.navbar-custom {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    margin-bottom: 30px;
-}
-
-.navbar-custom .navbar-brand {
-    color: white !important;
-    font-weight: bold;
-}
-
-.nav-link {
-    color: white !important;
-    transition: opacity 0.2s;
-}
-
-.nav-link:hover {
-    opacity: 0.8;
-}
-
-/* ---------- Карточки и контейнеры ---------- */
-.sidebar, 
-.stat-card, 
-.profile-card,
+/* ===== КАРТОЧКИ ===== */
+.login-card,
 .register-card,
-.login-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.3s, background 0.3s;
-}
-
-.sidebar:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
+.profile-card,
+.sidebar,
 .stat-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-    padding: 20px;
-    text-align: center;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
-}
-
-.profile-card,
-.register-card,
-.login-card {
-    padding: 40px;
-}
-
-.register-card,
-.login-card {
-    max-width: 500px;
-    width: 100%;
-    margin: 0 auto;
+    background: rgba(20, 0, 40, 0.75);
+    border: 1px solid rgba(180, 100, 255, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 25px rgba(140, 0, 255, 0.3);
+    transition: 0.3s;
+    position: relative;
     overflow: hidden;
 }
 
-.register-header,
-.login-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+/* блеск при наведении */
+
+.login-card:hover,
+.register-card:hover,
+.profile-card:hover,
+.sidebar:hover,
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 40px rgba(180, 0, 255, 0.5);
+}
+
+/* ===== HEADER ===== */
+.login-header,
+.register-header {
+    background: linear-gradient(135deg, #7a00ff, #d000ff);
+    padding: 25px;
+    text-align: center;
+    border-radius: 20px 20px 0 0;
+}
+
+/* ===== BODY ===== */
+.login-body,
+.register-body {
     padding: 30px;
-    text-align: center;
 }
 
-.register-body,
-.login-body {
-    padding: 40px;
-}
-
-/* ---------- Карточки очков ---------- */
-.points-card {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-}
-
-/* ---------- Кнопки ---------- */
-.btn-action,
-.btn-register,
+/* ===== КНОПКИ ===== */
 .btn-login,
-.btn-save {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    color: white;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-action:hover,
-.btn-register:hover,
-.btn-login:hover,
-.btn-save:hover {
-    transform: translateY(-2px);
-    color: white;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-}
-
 .btn-register,
-.btn-login {
+.btn-save,
+.btn-action {
+    background: linear-gradient(135deg, #6a00ff, #c000ff);
+    border: none;
+    border-radius: 12px;
     padding: 12px;
-    font-size: 18px;
-    font-weight: bold;
-    width: 100%;
-}
-
-.btn-save {
-    padding: 12px 30px;
-    font-weight: bold;
-}
-
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
     color: white;
-    padding: 12px 30px;
-    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+    position: relative;
 }
 
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
+.btn-login:hover,
+.btn-register:hover,
+.btn-save:hover,
+.btn-action:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(200, 0, 255, 0.9);
 }
 
-/* ---------- Формы ---------- */
 .form-control {
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(200,100,255,0.4);
+    color: #ffffff; /* ← ВАЖНО: яркий текст */
     border-radius: 10px;
     padding: 10px 15px;
 }
 
+/* текст при вводе */
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-    background: white;
+    color: #ffffff; /* ← фикс */
+    background: rgba(255,255,255,0.12);
+    border-color: #c000ff;
+    box-shadow: 0 0 10px #a000ff;
 }
 
-.form-label {
-    font-weight: 500;
-    margin-bottom: 8px;
+/* placeholder (подсказка) */
+.form-control::placeholder {
+    color: rgba(255,255,255,0.6);
 }
 
-/* ---------- Бейджи ---------- */
+/* для автозаполнения браузера (очень важно!) */
+input:-webkit-autofill {
+    -webkit-text-fill-color: #ffffff !important;
+    transition: background-color 9999s ease-in-out 0s;
+}
+/* ===== NAVBAR ===== */
+.navbar-custom {
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+}
+
+/* ===== POINTS ===== */
+.points-card {
+    background: linear-gradient(135deg, #ff00cc, #6600ff);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
+    animation: glow 3s infinite;
+}
+
+/* ===== HISTORY ===== */
+.history-item {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: 0.2s;
+}
+
+.history-item:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(5px);
+}
+
+/* ===== BADGES ===== */
 .victory-badge {
     background: #28a745;
-    padding: 4px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    padding: 4px 10px;
 }
 
 .defeat-badge {
     background: #dc3545;
-    padding: 4px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    padding: 4px 10px;
 }
 
-/* ---------- История и элементы списка ---------- */
-.history-item {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 10px;
-    transition: background 0.2s;
+/* ===== TEXT ===== */
+h1, h2, h3 {
+    color: #e0b3ff;
+    text-shadow: 0 0 10px rgba(200,0,255,0.5);
 }
 
-.history-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+/* ===== АНИМАЦИЯ ===== */
+@keyframes glow {
+    0% { box-shadow: 0 0 10px #a000ff; }
+    50% { box-shadow: 0 0 30px #ff00ff; }
+    100% { box-shadow: 0 0 10px #a000ff; }
+}
+/* ===== COSMIC REGISTER STYLE ===== */
+
+.cosmic-card {
+    background: rgba(15, 0, 35, 0.85);
+    border-radius: 20px;
+    border: 1px solid rgba(180, 100, 255, 0.25);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 40px rgba(120, 0, 255, 0.3);
+    overflow: hidden;
+    position: relative;
+}
+.cosmic-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 40px rgba(140, 0, 255, 0.6);
 }
 
-/* ---------- Аватар пользователя ---------- */
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
+.cosmic-header {
+    background: linear-gradient(135deg, #6a00ff, #d000ff);
+    padding: 30px;
+    text-align: center;
 }
 
-/* ---------- Иконки и анимации ---------- */
-.welcome-icon {
-    animation: float 3s ease-in-out infinite;
+.cosmic-title {
+    color: white;
+    font-size: 26px;
+    text-shadow: 0 0 15px rgba(255,255,255,0.6);
 }
 
-/* ---------- Алерты ---------- */
-.alert {
-    border-radius: 10px;
+.cosmic-subtitle {
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+.register-body {
+    padding: 30px;
+}
+
+/* кнопка */
+.cosmic-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
     border: none;
-}
-
-.alert-success {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    background: linear-gradient(135deg, #7a00ff, #ff00cc);
     color: white;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
-.alert-danger {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    color: white;
+.cosmic-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(200,0,255,0.9);
 }
 
-.alert-warning {
-    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-    color: #333;
+/* ссылка */
+.cosmic-link {
+    color: #d8aaff;
 }
 
-.alert-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #0dcaf0 100%);
-    color: white;
+/* инпуты красивее */
+.form-control {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(200,100,255,0.4);
+    color: #ffffff;
+    border-radius: 10px;
 }
 
-/* ---------- Текст и типографика ---------- */
-.opacity-75 {
-    opacity: 0.75;
+.form-control:focus {
+    background: rgba(255,255,255,0.12);
+    box-shadow: 0 0 15px #a000ff;
+}
+/* ===== СТИЛИ ДЛЯ КАРТОЧЕК В РЕЗУЛЬТАТАХ ГАЧИ ===== */
+
+/* Обложка карточки */
+.card-cover {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
 }
 
-.text-gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+/* Плейсхолдер для отсутствующего изображения */
+.card-placeholder {
+    height: 200px;
 }
 
-/* ---------- Утилиты ---------- */
-.cursor-pointer {
-    cursor: pointer;
+/* Анимация появления карточки */
+.result-card {
+    animation: revealCard 0.8s ease-out;
+    transition: transform 0.3s;
 }
 
-.transition-all {
+.result-card:hover {
+    transform: translateY(-10px);
+}
+
+@keyframes revealCard {
+    0% { 
+        transform: scale(0) rotateY(0deg); 
+        opacity: 0; 
+    }
+    50% { 
+        transform: scale(1.1) rotateY(180deg); 
+        opacity: 0.8; 
+    }
+    100% { 
+        transform: scale(1) rotateY(360deg); 
+        opacity: 1; 
+    }
+}
+
+/* Свечение для легендарных карт */
+.legendary-glow {
+    animation: legendaryPulse 2s infinite;
+}
+
+@keyframes legendaryPulse {
+    0% { 
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); 
+    }
+    50% { 
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); 
+    }
+    100% { 
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); 
+    }
+}
+
+/* Короны для легендарных карт */
+.legendary-crowns {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.legendary-crowns i {
+    font-size: 16px;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
+}
+
+/* Стили для бейджей редкости */
+.rarity-badge-Обычная,
+.rarity-badge-обычная {
+    background: #808080 !important;
+}
+
+.rarity-badge-Редкая,
+.rarity-badge-редкая {
+    background: #00ff00 !important;
+}
+
+.rarity-badge-Эпическая,
+.rarity-badge-эпическая {
+    background: #0088ff !important;
+}
+
+.rarity-badge-Легендарная,
+.rarity-badge-легендарная {
+    background: #ffd700 !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+/* Базовые стили для карточек */
+.card-cover {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-placeholder {
+    height: 200px;
+}
+
+.card-placeholder-icon {
+    font-size: 48px;
+    opacity: 0.5;
+}
+
+.card-title {
+    margin-bottom: 0.5rem;
+}
+
+/* Динамические стили будут применены через JS */
+.result-card {
     transition: all 0.3s ease;
 }
 
-/* ---------- Адаптивность ---------- */
+.result-card:hover {
+    transform: translateY(-10px);
+}
+
+.legendary-crowns {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.legendary-crowns i {
+    color: #ffd700;
+    font-size: 16px;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
+}
+/* =========================================
+   CARD DETAIL STYLES
+   ========================================= */
+
+/* Контейнер детальной страницы карточки */
+.card-detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Заголовок карточки */
+.card-detail-title {
+    color: #e0b3ff;
+    text-shadow: 0 0 15px rgba(200, 0, 255, 0.5);
+    font-weight: bold;
+}
+
+.card-badges {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Изображение карточки */
+.card-detail-image {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.card-detail-image:hover {
+    transform: scale(1.02);
+}
+
+.card-detail-img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.card-detail-placeholder {
+    background: #6c757d;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-icon {
+    font-size: 64px;
+    opacity: 0.5;
+    color: white;
+}
+
+/* Секция описания */
+.card-description {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.section-title {
+    color: #d8aaff;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.description-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Боксы статистики */
+.stat-box {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-box:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+    border-color: rgba(200, 100, 255, 0.4);
+}
+
+.strength-box .stat-value {
+    color: #ff6b6b;
+}
+
+.health-box .stat-value {
+    color: #4ecdc4;
+}
+
+.defence-box .stat-value {
+    color: #a8e6cf;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.stat-label {
+    font-size: 14px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Бокс общей силы */
+.total-power-box {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    animation: glowPulse 3s infinite;
+}
+
+@keyframes glowPulse {
+    0% { box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
+    50% { box-shadow: 0 5px 30px rgba(102, 126, 234, 0.7); }
+    100% { box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
+}
+
+.total-power-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.total-power-label {
+    font-size: 16px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: white;
+}
+
+/* Информационные строки */
+.card-info {
+    padding: 10px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.info-item i {
+    width: 20px;
+    text-align: center;
+}
+
+.coin-icon {
+    color: #ffd700;
+}
+
+.status-icon.active {
+    color: #00ff00;
+}
+
+.status-icon.inactive {
+    color: #ff0000;
+}
+
+.status-active {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.status-inactive {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+/* Кнопки действий */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    padding: 12px 30px;
+    margin: 5px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
-    .register-body,
-    .login-body,
-    .profile-card {
-        padding: 20px;
+    .card-detail-container {
+        padding: 0 15px;
     }
     
-    .stat-card {
-        margin-bottom: 15px;
-    }
-    
-    .display-5 {
+    .card-detail-title {
         font-size: 2rem;
     }
     
-    .navbar-custom .container-fluid {
-        flex-direction: column;
-        gap: 10px;
+    .stat-value {
+        font-size: 22px;
+    }
+    
+    .total-power-value {
+        font-size: 28px;
     }
     
     .btn-action {
-        width: 100%;
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .card-detail-placeholder {
+        height: 250px;
     }
 }
 
 @media (max-width: 576px) {
-    .register-header h2,
-    .login-header h2 {
-        font-size: 1.5rem;
+    .card-detail-title {
+        font-size: 1.8rem;
     }
     
-    .points-card h2 {
-        font-size: 1.8rem;
+    .stat-box {
+        padding: 10px;
+    }
+    
+    .stat-value {
+        font-size: 18px;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-action {
+        width: 100%;
+        margin: 5px 0;
     }
 }

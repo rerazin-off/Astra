@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'module_project/css/style.css' %}">
 </head>
+
 <body>
     <div class="container py-4">
         <nav class="navbar navbar-custom p-3">
@@ -31,12 +33,14 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{% url 'module_project:profile_edit' %}">
-                                <i class="fas fa-user-edit me-2"></i>Редактировать профиль
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
+                                    <i class="fas fa-user-edit me-2"></i>Редактировать профиль
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item text-danger" href="{% url 'module_project:logout' %}">
-                                <i class="fas fa-sign-out-alt me-2"></i>Выйти
-                            </a></li>
+                                    <i class="fas fa-sign-out-alt me-2"></i>Выйти
+                                </a></li>
                         </ul>
                     </div>
                 </div>
@@ -44,19 +48,19 @@
         </nav>
 
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
         {% endif %}
 
         <div class="text-center mb-5">
             <div class="welcome-icon mb-3">
                 <i class="fas fa-star-of-life" style="font-size: 48px; color: #ffd700;"></i>
             </div>
-            <h1 class="display-5 fw-bold">С возвращением, {{ user.nikname }}! 👋</h1>
+            <h1 class="display-5 fw-bold">С возвращением, {{ user.nikname }}!</h1>
             <p class="lead">Готов к новым космическим приключениям?</p>
         </div>
 
@@ -137,31 +141,32 @@
                 <div class="sidebar p-4 h-100">
                     <h5 class="mb-3"><i class="fas fa-history me-2"></i>История боёв</h5>
                     {% if recent_battles %}
-                        {% for battle in recent_battles %}
-                            <div class="history-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="badge {% if battle.is_victory %}victory-badge{% else %}defeat-badge{% endif %} mb-1">
-                                        {% if battle.is_victory %}Победа{% else %}Поражение{% endif %}
-                                    </span>
-                                    <div class="small opacity-75">{{ battle.battle_date|date:"d.m.Y H:i" }}</div>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold">
-                                        {% if battle.is_victory %}+{% endif %}{{ battle.points_earned }}
-                                    </div>
-                                    <div class="small opacity-75">очков</div>
-                                </div>
+                    {% for battle in recent_battles %}
+                    <div class="history-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span
+                                class="badge {% if battle.is_victory %}victory-badge{% else %}defeat-badge{% endif %} mb-1">
+                                {% if battle.is_victory %}Победа{% else %}Поражение{% endif %}
+                            </span>
+                            <div class="small opacity-75">{{ battle.battle_date|date:"d.m.Y H:i" }}</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">
+                                {% if battle.is_victory %}+{% endif %}{{ battle.points_earned }}
                             </div>
-                        {% endfor %}
-                        <div class="text-center mt-3">
-                            <a href="#" class="text-decoration-none small">Всего боёв: {{ total_battles }} →</a>
+                            <div class="small opacity-75">очков</div>
                         </div>
+                    </div>
+                    {% endfor %}
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none small">Всего боёв: {{ total_battles }} →</a>
+                    </div>
                     {% else %}
-                        <div class="text-center py-4 opacity-75">
-                            <i class="fas fa-fist-raised" style="font-size: 48px;"></i>
-                            <p class="mt-2">Пока нет боёв</p>
-                            <a href="#" class="btn btn-sm btn-action mt-2">Начать бой</a>
-                        </div>
+                    <div class="text-center py-4 opacity-75">
+                        <i class="fas fa-fist-raised" style="font-size: 48px;"></i>
+                        <p class="mt-2">Пока нет боёв</p>
+                        <a href="#" class="btn btn-sm btn-action mt-2">Начать бой</a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -170,32 +175,35 @@
                 <div class="sidebar p-4 h-100">
                     <h5 class="mb-3"><i class="fas fa-gift me-2"></i>Последние находки</h5>
                     {% if recent_gacha %}
-                        {% for item in recent_gacha %}
-                            <div class="history-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-id-card me-2" style="color: #667eea;"></i>
-                                    <strong>{{ item.card.title }}</strong>
-                                    <div class="small opacity-75">{{ item.obtained_at|date:"d.m.Y H:i" }}</div>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-info">{{ item.points_spent }} очков</span>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        <div class="text-center mt-3">
-                            <a href="#" class="text-decoration-none small">Попробовать удачу →</a>
+                    {% for item in recent_gacha %}
+                    <div class="history-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-id-card me-2" style="color: #667eea;"></i>
+                            <strong>{{ item.card.title }}</strong>
+                            <div class="small opacity-75">{{ item.obtained_at|date:"d.m.Y H:i" }}</div>
                         </div>
+                        <div class="text-end">
+                            <span class="badge bg-info">{{ item.points_spent }} очков</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none small">Попробовать удачу →</a>
+                    </div>
                     {% else %}
-                        <div class="text-center py-4 opacity-75">
-                            <i class="fas fa-dice-d6" style="font-size: 48px;"></i>
-                            <p class="mt-2">Пока нет карт</p>
-                            <a href="#" class="btn btn-sm btn-action mt-2">Открыть гачу</a>
-                        </div>
+                    <div class="text-center py-4 opacity-75">
+                        <i class="fas fa-dice-d6" style="font-size: 48px;"></i>
+                        <p class="mt-2">Пока нет карт</p>
+                        <a href="#" class="btn btn-sm btn-action mt-2">Открыть гачу</a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="{% static 'module_project/js/gacha.js' %}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

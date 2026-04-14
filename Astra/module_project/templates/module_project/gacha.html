@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гача | Космическая ККИ</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'module_project/css/style.css' %}">
+    <style>
+        .gacha-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .gacha-option {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .gacha-option:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .gacha-option.selected {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .pull-animation {
+            animation: pullCard 0.6s ease-out;
+        }
+
+        @keyframes pullCard {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2) rotate(180deg);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-4">
+        <!-- Навигация -->
+        <nav class="navbar navbar-custom p-3 mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="{% url 'module_project:dashboard' %}">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    <strong>Назад в кабинет</strong>
+                </a>
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <span class="text-white">
+                        <i class="fas fa-coins me-1"></i>
+                        <span class="fw-bold">{{ user.current_points }}</span> очков
+                    </span>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                        {{ user.nikname }}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Баннер гачи -->
+        <div class="gacha-banner">
+            <i class="fas fa-dice-d6" style="font-size: 64px; color: #ffd700; margin-bottom: 20px;"></i>
+            <h1 class="display-4 fw-bold text-white mb-3">Космическая Гача</h1>
+            <p class="lead text-white opacity-90">Испытайте удачу и получите редкие карточки!</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cosmic-card p-4">
+                    <h3 class="mb-4">
+                        <i class="fas fa-gem me-2" style="color: #ffd700;"></i>
+                        Выберите тип открытия
+                    </h3>
+
+                    <form method="post" id="gacha-form">
+                        {% csrf_token %}
+
+                        <div class="gacha-option" onclick="selectOption('single')">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input type="radio" name="gacha_type" value="single" id="single" checked
+                                        style="display: none;">
+                                    <h4>
+                                        <i class="fas fa-star me-2" style="color: #a0a0ff;"></i>
+                                        Одиночное открытие
+                                    </h4>
+                                    <p class="mb-0 opacity-75">1 случайная карточка</p>
+                                </div>
+                                <div class="text-end">
+                                    <div class="h4 mb-0" style="color: #ffd700;">
+                                        <i class="fas fa-coins me-1"></i>100
+                                    </div>
+                                    <small class="opacity-75">очков</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gacha-option" onclick="selectOption('ten')">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <input type="radio" name="gacha_type" value="ten" id="ten" style="display: none;">
+                                    <h4>
+                                        <i class="fas fa-crown me-2" style="color: #ffd700;"></i>
+                                        10 открытий
+                                    </h4>
+                                    <p class="mb-0 opacity-75">10 случайных карточек</p>
+                                    <span class="badge bg-success mt-2">Гарантированная редкая карта!</span>
+                                </div>
+                                <div class="text-end">
+                                    <div class="h4 mb-0" style="color: #ffd700;">
+                                        <i class="fas fa-coins me-1"></i>1000
+                                    </div>
+                                    <small class="opacity-75">очков</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Исправлено: используем if с else вместо сложных условий в атрибутах #}
+                        {% if user.current_points >= 100 %}
+                        <button type="submit" class="cosmic-btn mt-4">
+                            <i class="fas fa-dice me-2"></i>
+                            Открыть!
+                        </button>
+                        {% else %}
+                        <button type="button" class="cosmic-btn mt-4" disabled style="opacity: 0.5;">
+                            <i class="fas fa-dice me-2"></i>
+                            Недостаточно очков
+                        </button>
+                        {% endif %}
+                    </form>
+
+                    {% if user.current_points >= 100 %}
+                    {# Достаточно очков - ничего не показываем #}
+                    {% else %}
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        У вас недостаточно очков для открытия. Пополните баланс в личном кабинете.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="cosmic-card p-4">
+                    <h3 class="mb-4">
+                        <i class="fas fa-history me-2"></i>
+                        История открытий
+                    </h3>
+
+                    {% if gacha_history %}
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        {% for item in gacha_history %}
+                        <div class="history-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-id-card me-2" style="color: #667eea;"></i>
+                                <strong>{{ item.card.title }}</strong>
+                                {% if item.card.rarity %}
+                                <span class="badge ms-2 rarity-badge" data-color="{{ item.card.rarity.color }}">
+                                    {{ item.card.rarity.name }}
+                                </span>
+                                {% endif %}
+                                <div class="small opacity-75 mt-1">
+                                    {{ item.obtained_at|date:"d.m.Y H:i" }}
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-info">
+                                    <i class="fas fa-coins me-1"></i>{{ item.points_spent }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 opacity-75">
+                        <i class="fas fa-dice-d6" style="font-size: 48px;"></i>
+                        <p class="mt-3">У вас пока нет истории открытий</p>
+                        <p class="small">Попробуйте удачу!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Информация о редкостях -->
+        <div class="cosmic-card p-4 mt-4">
+            <h4 class="mb-3">
+                <i class="fas fa-info-circle me-2"></i>
+                Шансы выпадения
+            </h4>
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <div class="p-3 rounded" style="background: rgba(255,255,255,0.1);">
+                        <i class="fas fa-star" style="color: #808080; font-size: 24px;"></i>
+                        <h5 class="mt-2">Обычная</h5>
+                        <h3 style="color: #808080;">50%</h3>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="p-3 rounded" style="background: rgba(255,255,255,0.1);">
+                        <i class="fas fa-star" style="color: #00ff00; font-size: 24px;"></i>
+                        <h5 class="mt-2">Редкая</h5>
+                        <h3 style="color: #00ff00;">30%</h3>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="p-3 rounded" style="background: rgba(255,255,255,0.1);">
+                        <i class="fas fa-star" style="color: #0088ff; font-size: 24px;"></i>
+                        <h5 class="mt-2">Эпическая</h5>
+                        <h3 style="color: #0088ff;">15%</h3>
+                    </div>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="p-3 rounded" style="background: rgba(255,255,255,0.1);">
+                        <i class="fas fa-crown" style="color: #ffd700; font-size: 24px;"></i>
+                        <h5 class="mt-2">Легендарная</h5>
+                        <h3 style="color: #ffd700;">5%</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function selectOption(type) {
+            document.querySelectorAll('.gacha-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            document.querySelector(`input[value="${type}"]`).checked = true;
+        }
+
+        // Выбираем первый вариант по умолчанию
+        document.querySelector('.gacha-option').classList.add('selected');
+    </script>
+</body>
+<script src="{% static 'module_project/js/main.js' %}" defer></script>
+</html>

@@ -2,111 +2,94 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация | Космическая ККИ</title>
+    <title>Регистрация</title>
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'module_project/css/style.css' %}">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .register-card {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-    </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-md-6 col-lg-5">
-                <div class="register-card">
-                    <div class="register-header">
-                        <h2 class="mb-2">🌟 Добро пожаловать!</h2>
-                        <p class="mb-0">Создайте аккаунт и начните своё космическое приключение</p>
-                    </div>
-                    <div class="register-body">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            {% endfor %}
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+
+        <div class="col-md-6 col-lg-5">
+            <div class="register-card cosmic-card">
+
+                <!-- HEADER -->
+                <div class="register-header cosmic-header">
+                    <h2 class="cosmic-title">Создание аккаунта</h2>
+                    <p class="cosmic-subtitle">Открой свою судьбу</p>
+                </div>
+
+                <!-- BODY -->
+                <div class="register-body">
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Никнейм</label>
+                            {{ form.nikname }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Имя</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Фамилия</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            {{ form.password }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Подтверждение пароля</label>
+                            {{ form.confirm_password }}
+                        </div>
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors.0 }}
+                            </div>
                         {% endif %}
-                        
-                        <form method="post">
-                            {% csrf_token %}
-                            
-                            <div class="mb-3">
-                                <label for="{{ form.nikname.id_for_label }}" class="form-label">👤 Никнейм</label>
-                                {{ form.nikname }}
-                                {% if form.nikname.errors %}
-                                    <div class="text-danger small mt-1">{{ form.nikname.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.name.id_for_label }}" class="form-label">📝 Имя</label>
-                                    {{ form.name }}
-                                    {% if form.name.errors %}
-                                        <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">📝 Фамилия</label>
-                                    {{ form.last_name }}
-                                    {% if form.last_name.errors %}
-                                        <div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="{{ form.email.id_for_label }}" class="form-label">📧 Email</label>
-                                {{ form.email }}
-                                {% if form.email.errors %}
-                                    <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="{{ form.password.id_for_label }}" class="form-label">🔒 Пароль</label>
-                                {{ form.password }}
-                                {% if form.password.errors %}
-                                    <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label for="{{ form.confirm_password.id_for_label }}" class="form-label">🔒 Подтверждение пароля</label>
-                                {{ form.confirm_password }}
-                                {% if form.confirm_password.errors %}
-                                    <div class="text-danger small mt-1">{{ form.confirm_password.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            {% if form.non_field_errors %}
-                                <div class="alert alert-danger">
-                                    {{ form.non_field_errors.0 }}
-                                </div>
-                            {% endif %}
-                            
-                            <button type="submit" class="btn-register">
-                                🚀 Зарегистрироваться
-                            </button>
-                            
-                            <div class="text-center mt-3">
-                                <p class="mb-0">Уже есть аккаунт? <a href="{% url 'module_project:login' %}" class="text-decoration-none">Войдите</a></p>
-                            </div>
-                        </form>
-                    </div>
+
+                        <button class="btn-register cosmic-btn">
+                            Зарегистрироваться
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <a href="{% url 'module_project:login' %}" class="cosmic-link">
+                                Уже есть аккаунт
+                            </a>
+                        </div>
+
+                    </form>
+
                 </div>
             </div>
         </div>
+
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div>
 </body>
 </html>

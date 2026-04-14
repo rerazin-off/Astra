@@ -18,6 +18,7 @@ urlpatterns = [
     path('card/<int:card_id>/edit/', views.edit_card, name='edit_card'),
     path('card/<int:card_id>/delete/', views.delete_card, name='delete_card'),
     path('gacha/', views.gacha, name='gacha'),
+    path('gacha/result/', views.gacha_result, name='gacha_result'),
     path('battle/', views.battle, name='battle'),
     path('battle/history/', views.battle_history, name='battle_history'),
     path('favorite/<int:inventory_id>/', views.add_to_favorite, name='add_to_favorite'),

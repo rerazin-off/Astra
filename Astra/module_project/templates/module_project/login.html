@@ -1,77 +1,68 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход | Космическая ККИ</title>
+    <title>Вход</title>
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'module_project/css/style.css' %}">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .login-card {
-            max-width: 450px;
-            margin: 0 auto;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-md-6 col-lg-5">
-                <div class="login-card">
-                    <div class="sparkle" style="top:10%; left:20%"></div>
-                    <div class="sparkle" style="top:70%; left:80%"></div>
-                    <div class="sparkle" style="top:40%; left:50%"></div>
-                    <div class="login-header">
-                        <h2 class="mb-2">🎮 Добро пожаловать!</h2>
-                        <p class="mb-0">Войдите в свой аккаунт</p>
-                    </div>
-                    <div class="login-body">
-                        {% if messages %}
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+
+        <div class="col-md-6 col-lg-5">
+            <div class="login-card cosmic-card">
+
+                <!-- HEADER -->
+                <div class="login-header cosmic-header">
+                    <h2 class="cosmic-title">Вход в аккаунт</h2>
+                    <p class="cosmic-subtitle">Продолжите своё путешествие</p>
+                </div>
+
+                <!-- BODY -->
+                <div class="login-body">
+
+                    {% if messages %}
                         {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
                         {% endfor %}
-                        {% endif %}
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="nikname" class="form-label">Никнейм</label>
+                            <input type="text" name="nikname" id="nikname" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Пароль</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-login cosmic-btn">
+                            Войти
+                        </button>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{% url 'module_project:register' %}" class="cosmic-link">
+                                Создать аккаунт
+                            </a>
+                        </div>
 
-                        <form method="post">
-                            {% csrf_token %}
+                    </form>
 
-                            <div class="mb-3">
-                                <label for="nikname" class="form-label">👤 Никнейм</label>
-                                <input type="text" name="nikname" id="nikname" class="form-control"
-                                    placeholder="Введите ваш никнейм" required>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="password" class="form-label">🔒 Пароль</label>
-                                <input type="password" name="password" id="password" class="form-control"
-                                    placeholder="Введите пароль" required>
-                            </div>
-
-                            <button type="submit" class="btn-login">
-                                🎮 Войти
-                            </button>
-
-                            <div class="text-center mt-3">
-                                <p class="mb-0">Нет аккаунта? <a href="{% url 'module_project:register' %}"
-                                        class="text-decoration-none">Зарегистрируйтесь</a></p>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
 
+    </div>
+</div>
+</body>
 </html>
