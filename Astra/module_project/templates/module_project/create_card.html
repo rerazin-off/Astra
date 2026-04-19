@@ -1,171 +1,192 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание карточки | Космическая ККИ</title>
-    {% load static %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'module_project/css/style.css' %}">
-</head>
-<body>
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="cosmic-card">
-                    <div class="cosmic-header">
-                        <h2 class="cosmic-title">
-                            <i class="fas fa-magic me-2"></i>Создание карточки
-                        </h2>
-                        <p class="cosmic-subtitle">Создайте уникальную карточку для игры</p>
-                    </div>
-                    
-                    <div class="p-4">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+{% extends 'module_project/base.html' %}
+{% load static %}
+
+{% block title %}Создание карточки | Космическая ККИ{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="cosmic-card">
+                <div class="cosmic-header">
+                    <h2 class="cosmic-title">
+                        <i class="fas fa-magic me-2"></i>Создание карточки
+                    </h2>
+                    <p class="cosmic-subtitle">Создайте уникальную карточку для игры</p>
+                </div>
+                
+                <div class="p-4">
+                    <form method="post" enctype="multipart/form-data" id="create-card-form">
+                        {% csrf_token %}
                         
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.title.id_for_label }}" class="form-label">
-                                        <i class="fas fa-heading me-1"></i>Название
-                                    </label>
-                                    {{ form.title }}
-                                    {% if form.title.errors %}
-                                        <div class="text-danger small">{{ form.title.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.cover_image.id_for_label }}" class="form-label">
-                                        <i class="fas fa-image me-1"></i>Обложка
-                                    </label>
-                                    {{ form.cover_image }}
-                                    {% if form.cover_image.errors %}
-                                        <div class="text-danger small">{{ form.cover_image.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="{{ form.description.id_for_label }}" class="form-label">
-                                    <i class="fas fa-align-left me-1"></i>Описание
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.title.id_for_label }}" class="form-label">
+                                    <i class="fas fa-heading me-1"></i>Название
                                 </label>
-                                {{ form.description }}
-                                {% if form.description.errors %}
-                                    <div class="text-danger small">{{ form.description.errors.0 }}</div>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger small">{{ form.title.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label for="{{ form.strenth.id_for_label }}" class="form-label">
-                                        <i class="fas fa-fist-raised me-1"></i>Сила
-                                    </label>
-                                    {{ form.strenth }}
-                                    {% if form.strenth.errors %}
-                                        <div class="text-danger small">{{ form.strenth.errors.0 }}</div>
-                                    {% endif %}
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.cover_image.id_for_label }}" class="form-label">
+                                    <i class="fas fa-image me-1"></i>Обложка
+                                </label>
+                                {{ form.cover_image }}
+                                <div id="image-preview" class="mt-2" style="display: none;">
+                                    <img id="preview-img" src="#" alt="Preview" style="max-width: 100%; max-height: 150px; border-radius: 10px;">
                                 </div>
-                                
-                                <div class="col-md-4 mb-3">
-                                    <label for="{{ form.health.id_for_label }}" class="form-label">
-                                        <i class="fas fa-heart me-1"></i>Здоровье
-                                    </label>
-                                    {{ form.health }}
-                                    {% if form.health.errors %}
-                                        <div class="text-danger small">{{ form.health.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-4 mb-3">
-                                    <label for="{{ form.defence.id_for_label }}" class="form-label">
-                                        <i class="fas fa-shield me-1"></i>Защита
-                                    </label>
-                                    {{ form.defence }}
-                                    {% if form.defence.errors %}
-                                        <div class="text-danger small">{{ form.defence.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
+                                {% if form.cover_image.errors %}
+                                    <div class="text-danger small">{{ form.cover_image.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                <i class="fas fa-align-left me-1"></i>Описание
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small">{{ form.description.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.strenth.id_for_label }}" class="form-label">
+                                    <i class="fas fa-fist-raised me-1"></i>Сила
+                                </label>
+                                {{ form.strenth }}
+                                {% if form.strenth.errors %}
+                                    <div class="text-danger small">{{ form.strenth.errors.0 }}</div>
+                                {% endif %}
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.attribute.id_for_label }}" class="form-label">
-                                        <i class="fas fa-fire me-1"></i>Атрибут
-                                    </label>
-                                    {{ form.attribute }}
-                                    {% if form.attribute.errors %}
-                                        <div class="text-danger small">{{ form.attribute.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.rarity.id_for_label }}" class="form-label">
-                                        <i class="fas fa-star me-1"></i>Редкость
-                                    </label>
-                                    {{ form.rarity }}
-                                    {% if form.rarity.errors %}
-                                        <div class="text-danger small">{{ form.rarity.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.health.id_for_label }}" class="form-label">
+                                    <i class="fas fa-heart me-1"></i>Здоровье
+                                </label>
+                                {{ form.health }}
+                                {% if form.health.errors %}
+                                    <div class="text-danger small">{{ form.health.errors.0 }}</div>
+                                {% endif %}
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.price_points.id_for_label }}" class="form-label">
-                                        <i class="fas fa-coins me-1"></i>Цена в очках
-                                    </label>
-                                    {{ form.price_points }}
-                                    {% if form.price_points.errors %}
-                                        <div class="text-danger small">{{ form.price_points.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    <label for="{{ form.author.id_for_label }}" class="form-label">
-                                        <i class="fas fa-user me-1"></i>Автор
-                                    </label>
-                                    {{ form.author }}
-                                    {% if form.author.errors %}
-                                        <div class="text-danger small">{{ form.author.errors.0 }}</div>
-                                    {% endif %}
-                                </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.defence.id_for_label }}" class="form-label">
+                                    <i class="fas fa-shield-alt me-1"></i>Защита
+                                </label>
+                                {{ form.defence }}
+                                {% if form.defence.errors %}
+                                    <div class="text-danger small">{{ form.defence.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.attribute.id_for_label }}" class="form-label">
+                                    <i class="fas fa-fire me-1"></i>Атрибут
+                                </label>
+                                {{ form.attribute }}
+                                {% if form.attribute.errors %}
+                                    <div class="text-danger small">{{ form.attribute.errors.0 }}</div>
+                                {% endif %}
                             </div>
                             
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    {{ form.is_active }}
-                                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
-                                        <i class="fas fa-check-circle me-1"></i>Активна
-                                    </label>
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.rarity.id_for_label }}" class="form-label">
+                                    <i class="fas fa-star me-1"></i>Редкость
+                                </label>
+                                {{ form.rarity }}
+                                {% if form.rarity.errors %}
+                                    <div class="text-danger small">{{ form.rarity.errors.0 }}</div>
+                                {% endif %}
                             </div>
-                            
-                            <div class="d-flex justify-content-between mt-4">
-                                <a href="{% url 'module_project:dashboard' %}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Назад
-                                </a>
-                                <button type="submit" class="cosmic-btn" style="width: auto; padding: 12px 40px;">
-                                    <i class="fas fa-plus-circle me-2"></i>Создать карточку
-                                </button>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.price_points.id_for_label }}" class="form-label">
+                                    <i class="fas fa-coins me-1"></i>Цена в очках
+                                </label>
+                                {{ form.price_points }}
+                                {% if form.price_points.errors %}
+                                    <div class="text-danger small">{{ form.price_points.errors.0 }}</div>
+                                {% endif %}
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                    <i class="fas fa-check-circle me-1"></i>Активна
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Информация об авторе (автоматически) -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-user me-2"></i>
+                            <strong>Автор карты:</strong> {{ user.nikname }} (назначается автоматически)
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'module_project:card_catalog' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Назад в каталог
+                            </a>
+                            <button type="submit" class="cosmic-btn" style="width: auto; padding: 12px 40px;">
+                                <i class="fas fa-plus-circle me-2"></i>Создать карточку
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<script>
+// Предпросмотр изображения
+document.getElementById('{{ form.cover_image.id_for_label }}').addEventListener('change', function(e) {
+    const preview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(this.files[0]);
+    } else {
+        preview.style.display = 'none';
+    }
+});
+
+// Валидация формы
+document.getElementById('create-card-form').addEventListener('submit', function(e) {
+    const strength = parseInt(document.getElementById('{{ form.strenth.id_for_label }}').value) || 0;
+    const health = parseInt(document.getElementById('{{ form.health.id_for_label }}').value) || 0;
+    const defence = parseInt(document.getElementById('{{ form.defence.id_for_label }}').value) || 0;
+    const total = strength + health + defence;
+    
+    if (total > 100) {
+        e.preventDefault();
+        alert('Сумма характеристик не может превышать 100!');
+    }
+    
+    if (total < 10) {
+        e.preventDefault();
+        alert('Сумма характеристик должна быть не менее 10!');
+    }
+});
+</script>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'module_project/js/card-form.js' %}"></script>
+{% endblock %}

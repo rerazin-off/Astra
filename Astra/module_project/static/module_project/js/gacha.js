@@ -81,3 +81,139 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// gacha.js - Функции для гача системы
+
+document.addEventListener('DOMContentLoaded', function() {
+    const gachaForm = document.getElementById('gacha-form');
+    const gachaOptions = document.querySelectorAll('.gacha-option');
+    
+    // Если мы не на странице гачи - выходим
+    if (!gachaForm) return;
+    
+    // Функция выбора опции
+    window.selectOption = function(type) {
+        gachaOptions.forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        
+        const selectedOption = document.querySelector(`.gacha-option:has(input[value="${type}"])`);
+        if (selectedOption) {
+            selectedOption.classList.add('selected');
+        }
+        
+        const radio = document.querySelector(`input[value="${type}"]`);
+        if (radio) {
+            radio.checked = true;
+        }
+    };
+    
+    // Выбираем первый вариант по умолчанию
+    if (gachaOptions.length > 0) {
+        gachaOptions[0].classList.add('selected');
+    }
+    
+    // Анимация открытия
+    gachaForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const selectedOption = document.querySelector('input[name="gacha_type"]:checked');
+        const cost = selectedOption.value === 'single' ? 100 : 1000;
+        
+        // Проверка баланса
+        const currentPoints = parseInt(document.querySelector('.fa-coins').nextElementSibling?.textContent || '0');
+        
+        if (currentPoints < cost) {
+            showNotification('Недостаточно очков для открытия!', 'warning');
+            return;
+        }
+        
+        // Анимация кнопки
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Открываем...';
+        
+        // Эффект тряски
+        const gachaBanner = document.querySelector('.gacha-banner');
+        if (gachaBanner) {
+            gachaBanner.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                gachaBanner.style.animation = '';
+            }, 500);
+        }
+        
+        // Отправляем форму
+        setTimeout(() => {
+            this.submit();
+        }, 1000);
+    });
+    
+    // Добавляем стиль для анимации тряски
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+    `;
+    document.head.appendChild(style);
+});
+
+// Функции для страницы результатов гачи
+document.addEventListener('DOMContentLoaded', function() {
+    const resultCards = document.querySelectorAll('.result-card');
+    
+    if (resultCards.length === 0) return;
+    
+    // Последовательная анимация карт
+    resultCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add('revealed');
+        }, index * 200);
+    });
+    
+    // Подсветка легендарных карт
+    const legendaryCards = document.querySelectorAll('[data-rarity="Легендарная"]');
+    legendaryCards.forEach(card => {
+        card.classList.add('legendary-glow');
+        
+        // Звуковой эффект (опционально)
+        // const audio = new Audio('/static/module_project/sounds/legendary.mp3');
+        // audio.play();
+    });
+    
+    // Конфетти для легендарных карт
+    if (legendaryCards.length > 0) {
+        createConfetti();
+    }
+    
+    function createConfetti() {
+        const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#667eea'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.top = '-10px';
+            confetti.style.opacity = '0.8';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.zIndex = '9999';
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+            confetti.style.transition = 'all 3s ease-out';
+            
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                confetti.style.top = '100%';
+                confetti.style.left = (parseFloat(confetti.style.left) + (Math.random() - 0.5) * 20) + '%';
+            }, 10);
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, 3000);
+        }
+    }
+});

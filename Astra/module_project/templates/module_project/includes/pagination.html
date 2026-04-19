@@ -1,0 +1,29 @@
+{% if cards.has_other_pages %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if cards.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ cards.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rarity %}&rarity={{ request.GET.rarity }}{% endif %}{% if request.GET.attribute %}&attribute={{ request.GET.attribute }}{% endif %}">
+                        &laquo;
+                    </a>
+                </li>
+            {% endif %}
+            
+            {% for num in cards.paginator.page_range %}
+                <li class="page-item {% if cards.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rarity %}&rarity={{ request.GET.rarity }}{% endif %}{% if request.GET.attribute %}&attribute={{ request.GET.attribute }}{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+            {% endfor %}
+            
+            {% if cards.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ cards.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rarity %}&rarity={{ request.GET.rarity }}{% endif %}{% if request.GET.attribute %}&attribute={{ request.GET.attribute }}{% endif %}">
+                        &raquo;
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}

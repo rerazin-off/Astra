@@ -1,0 +1,8 @@
+services:
+  astra:
+    image: astra
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8090:8090

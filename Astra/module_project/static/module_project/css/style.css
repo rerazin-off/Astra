@@ -1,7 +1,55 @@
-/* =========================================
-   COSMIC GACHA STYLE (КРАСИВЫЙ И БЕЗОПАСНЫЙ)
-   ========================================= */
+/* ===========================================
+   КОСМИЧЕСКАЯ ККИ - ОСНОВНЫЕ СТИЛИ
+   =========================================== */
 
+/* ----- ИМПОРТ ШРИФТОВ ----- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
+
+/* ----- CSS ПЕРЕМЕННЫЕ ----- */
+:root {
+    /* Основные цвета */
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --accent-color: #ffd700;
+    --success-color: #4ecdc4;
+    --danger-color: #ff6b6b;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+    
+    /* Космическая тема */
+    --space-dark: #0f0c29;
+    --space-medium: #302b63;
+    --space-light: #24243e;
+    --star-color: #ffffff;
+    --nebula-primary: #667eea;
+    --nebula-secondary: #764ba2;
+    
+    /* Редкости карт */
+    --rarity-common: #808080;
+    --rarity-rare: #00ff00;
+    --rarity-epic: #0088ff;
+    --rarity-legendary: #ffd700;
+    
+    /* Размеры */
+    --header-height: 70px;
+    --sidebar-width: 280px;
+    --border-radius: 15px;
+    --border-radius-lg: 20px;
+    --border-radius-sm: 10px;
+    
+    /* Тени */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 8px rgba(0,0,0,0.2);
+    --shadow-lg: 0 10px 40px rgba(102, 126, 234, 0.4);
+    --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.5);
+    
+    /* Анимации */
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+/* ----- БАЗОВЫЕ СТИЛИ ----- */
 * {
     margin: 0;
     padding: 0;
@@ -9,269 +57,438 @@
 }
 
 body {
-    background: radial-gradient(circle at top, #1a0033, #050010 80%);
-    font-family: 'Segoe UI', sans-serif;
-    color: white;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-medium) 50%, var(--space-light) 100%);
+    color: #ffffff;
     min-height: 100vh;
-}
-
-/* звёздный фон */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: url("https://www.transparenttextures.com/patterns/stardust.png");
-    opacity: 0.2;
-    z-index: -1;
-}
-
-/* свечение */
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(140,0,255,0.2), transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255,0,200,0.15), transparent 40%);
-    z-index: -1;
-}
-
-/* ===== КАРТОЧКИ ===== */
-.login-card,
-.register-card,
-.profile-card,
-.sidebar,
-.stat-card {
-    background: rgba(20, 0, 40, 0.75);
-    border: 1px solid rgba(180, 100, 255, 0.3);
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 0 25px rgba(140, 0, 255, 0.3);
-    transition: 0.3s;
     position: relative;
+    overflow-x: hidden;
+}
+
+/* Звездный фон */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 50px 160px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, #fff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: -1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition-base);
+}
+
+a:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+/* ----- НАВИГАЦИЯ ----- */
+.navbar {
+    background: rgba(15, 12, 41, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+    box-shadow: var(--shadow-md);
+}
+
+.navbar-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-base);
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--accent-color) !important;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+/* Мобильное меню */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background: rgba(15, 12, 41, 0.98);
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        margin-top: 1rem;
+    }
+}
+
+/* ----- КАРТОЧКИ ----- */
+.cosmic-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-base);
     overflow: hidden;
 }
 
-/* блеск при наведении */
-
-.login-card:hover,
-.register-card:hover,
-.profile-card:hover,
-.sidebar:hover,
-.stat-card:hover {
+.cosmic-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 0 40px rgba(180, 0, 255, 0.5);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(102, 126, 234, 0.3);
 }
 
-/* ===== HEADER ===== */
-.login-header,
-.register-header {
-    background: linear-gradient(135deg, #7a00ff, #d000ff);
-    padding: 25px;
-    text-align: center;
-    border-radius: 20px 20px 0 0;
-}
-
-/* ===== BODY ===== */
-.login-body,
-.register-body {
-    padding: 30px;
-}
-
-/* ===== КНОПКИ ===== */
-.btn-login,
-.btn-register,
-.btn-save,
-.btn-action {
-    background: linear-gradient(135deg, #6a00ff, #c000ff);
-    border: none;
-    border-radius: 12px;
-    padding: 12px;
-    color: white;
-    font-weight: bold;
-    transition: 0.3s;
+.card-item {
+    cursor: pointer;
     position: relative;
 }
 
-.btn-login:hover,
-.btn-register:hover,
-.btn-save:hover,
-.btn-action:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(200, 0, 255, 0.9);
+.card-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent, rgba(102, 126, 234, 0.1));
+    opacity: 0;
+    transition: var(--transition-base);
+    pointer-events: none;
 }
 
-.form-control {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(200,100,255,0.4);
-    color: #ffffff; /* ← ВАЖНО: яркий текст */
-    border-radius: 10px;
-    padding: 10px 15px;
+.card-item:hover::before {
+    opacity: 1;
 }
 
-/* текст при вводе */
-.form-control:focus {
-    color: #ffffff; /* ← фикс */
-    background: rgba(255,255,255,0.12);
-    border-color: #c000ff;
-    box-shadow: 0 0 10px #a000ff;
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
-/* placeholder (подсказка) */
-.form-control::placeholder {
-    color: rgba(255,255,255,0.6);
+.card-placeholder-small {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, var(--space-medium), var(--space-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
-/* для автозаполнения браузера (очень важно!) */
-input:-webkit-autofill {
-    -webkit-text-fill-color: #ffffff !important;
-    transition: background-color 9999s ease-in-out 0s;
+.card-placeholder-small i {
+    font-size: 48px;
+    color: rgba(255, 255, 255, 0.3);
 }
-/* ===== NAVBAR ===== */
-.navbar-custom {
-    background: rgba(0,0,0,0.5);
+
+.card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.card-stats {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.card-stats i {
+    margin-right: 3px;
+}
+
+/* ----- СТАТИСТИКА ----- */
+.stat-card {
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
-    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    transition: var(--transition-base);
 }
 
-/* ===== POINTS ===== */
-.points-card {
-    background: linear-gradient(135deg, #ff00cc, #6600ff);
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
-    animation: glow 3s infinite;
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-glow);
 }
 
-/* ===== HISTORY ===== */
-.history-item {
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 10px;
-    transition: 0.2s;
+.stat-card i {
+    transition: var(--transition-base);
 }
 
-.history-item:hover {
-    background: rgba(255,255,255,0.1);
+.stat-card:hover i {
+    transform: scale(1.1);
+}
+
+.stat-card-small {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition-base);
+}
+
+.stat-card-small:hover {
+    background: rgba(255, 255, 255, 0.12);
     transform: translateX(5px);
 }
 
-/* ===== BADGES ===== */
-.victory-badge {
-    background: #28a745;
-    border-radius: 20px;
-    padding: 4px 10px;
+.stat-card-small i {
+    font-size: 2rem;
 }
 
-.defeat-badge {
-    background: #dc3545;
-    border-radius: 20px;
-    padding: 4px 10px;
-}
-
-/* ===== TEXT ===== */
-h1, h2, h3 {
-    color: #e0b3ff;
-    text-shadow: 0 0 10px rgba(200,0,255,0.5);
-}
-
-/* ===== АНИМАЦИЯ ===== */
-@keyframes glow {
-    0% { box-shadow: 0 0 10px #a000ff; }
-    50% { box-shadow: 0 0 30px #ff00ff; }
-    100% { box-shadow: 0 0 10px #a000ff; }
-}
-/* ===== COSMIC REGISTER STYLE ===== */
-
-.cosmic-card {
-    background: rgba(15, 0, 35, 0.85);
-    border-radius: 20px;
-    border: 1px solid rgba(180, 100, 255, 0.25);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 40px rgba(120, 0, 255, 0.3);
-    overflow: hidden;
-    position: relative;
-}
-.cosmic-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 0 40px rgba(140, 0, 255, 0.6);
-}
-
-.cosmic-header {
-    background: linear-gradient(135deg, #6a00ff, #d000ff);
-    padding: 30px;
-    text-align: center;
-}
-
-.cosmic-title {
-    color: white;
-    font-size: 26px;
-    text-shadow: 0 0 15px rgba(255,255,255,0.6);
-}
-
-.cosmic-subtitle {
-    opacity: 0.8;
-    font-size: 14px;
-}
-
-.register-body {
-    padding: 30px;
-}
-
-/* кнопка */
-.cosmic-btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    background: linear-gradient(135deg, #7a00ff, #ff00cc);
-    color: white;
+.stat-card-small h4 {
+    margin: 0;
+    font-size: 1.5rem;
     font-weight: bold;
-    transition: 0.3s;
+}
+
+.stat-card-small small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+}
+
+/* ----- КНОПКИ ----- */
+.cosmic-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-md);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cosmic-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: var(--transition-slow);
+}
+
+.cosmic-btn:hover::before {
+    left: 100%;
 }
 
 .cosmic-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(200,0,255,0.9);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    color: white;
 }
 
-/* ссылка */
-.cosmic-link {
-    color: #d8aaff;
+.cosmic-btn:active {
+    transform: translateY(-1px);
 }
 
-/* инпуты красивее */
-.form-control {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(200,100,255,0.4);
-    color: #ffffff;
-    border-radius: 10px;
+.cosmic-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-.form-control:focus {
-    background: rgba(255,255,255,0.12);
-    box-shadow: 0 0 15px #a000ff;
-}
-/* ===== СТИЛИ ДЛЯ КАРТОЧЕК В РЕЗУЛЬТАТАХ ГАЧИ ===== */
-
-/* Обложка карточки */
-.card-cover {
-    height: 200px;
-    width: 100%;
-    object-fit: cover;
+.btn-action {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-base);
 }
 
-/* Плейсхолдер для отсутствующего изображения */
-.card-placeholder {
-    height: 200px;
+.btn-action:hover {
+    background: rgba(102, 126, 234, 0.3);
+    border-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
 }
 
-/* Анимация появления карточки */
+/* ----- ФОРМЫ ----- */
+.form-control, .form-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: var(--border-radius-sm);
+    padding: 10px 15px;
+    transition: var(--transition-base);
+}
+
+.form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* ----- АЛЕРТЫ И УВЕДОМЛЕНИЯ ----- */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    backdrop-filter: blur(10px);
+    animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.alert-success {
+    background: rgba(78, 205, 196, 0.2);
+    color: var(--success-color);
+    border-left: 4px solid var(--success-color);
+}
+
+.alert-danger {
+    background: rgba(255, 107, 107, 0.2);
+    color: var(--danger-color);
+    border-left: 4px solid var(--danger-color);
+}
+
+.alert-warning {
+    background: rgba(243, 156, 18, 0.2);
+    color: var(--warning-color);
+    border-left: 4px solid var(--warning-color);
+}
+
+.alert-info {
+    background: rgba(52, 152, 219, 0.2);
+    color: var(--info-color);
+    border-left: 4px solid var(--info-color);
+}
+
+/* ----- ГАЧА СИСТЕМА ----- */
+.gacha-banner {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.gacha-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.gacha-option {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: var(--transition-base);
+    border: 2px solid transparent;
+}
+
+.gacha-option:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+}
+
+.gacha-option.selected {
+    border-color: var(--accent-color);
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.pull-animation {
+    animation: pullCard 0.6s ease-out;
+}
+
+@keyframes pullCard {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+/* ----- РЕЗУЛЬТАТЫ ГАЧИ ----- */
 .result-card {
     animation: revealCard 0.8s ease-out;
     transition: transform 0.3s;
+    position: relative;
 }
 
 .result-card:hover {
@@ -279,372 +496,449 @@ h1, h2, h3 {
 }
 
 @keyframes revealCard {
-    0% { 
-        transform: scale(0) rotateY(0deg); 
-        opacity: 0; 
+    0% {
+        transform: scale(0) rotateY(0deg);
+        opacity: 0;
     }
-    50% { 
-        transform: scale(1.1) rotateY(180deg); 
-        opacity: 0.8; 
+    50% {
+        transform: scale(1.1) rotateY(180deg);
+        opacity: 0.8;
     }
-    100% { 
-        transform: scale(1) rotateY(360deg); 
-        opacity: 1; 
+    100% {
+        transform: scale(1) rotateY(360deg);
+        opacity: 1;
     }
 }
 
-/* Свечение для легендарных карт */
 .legendary-glow {
     animation: legendaryPulse 2s infinite;
 }
 
 @keyframes legendaryPulse {
-    0% { 
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); 
+    0% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
-    50% { 
-        box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); 
+    50% {
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
     }
-    100% { 
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); 
+    100% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
 }
 
-/* Короны для легендарных карт */
-.legendary-crowns {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-}
-
-.legendary-crowns i {
-    font-size: 16px;
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
-}
-
-/* Стили для бейджей редкости */
-.rarity-badge-Обычная,
-.rarity-badge-обычная {
-    background: #808080 !important;
-}
-
-.rarity-badge-Редкая,
-.rarity-badge-редкая {
-    background: #00ff00 !important;
-}
-
-.rarity-badge-Эпическая,
-.rarity-badge-эпическая {
-    background: #0088ff !important;
-}
-
-.rarity-badge-Легендарная,
-.rarity-badge-легендарная {
-    background: #ffd700 !important;
-    color: #000 !important;
-    font-weight: bold;
-}
-/* Базовые стили для карточек */
-.card-cover {
-    height: 200px;
-    width: 100%;
-    object-fit: cover;
-}
-
-.card-placeholder {
-    height: 200px;
-}
-
-.card-placeholder-icon {
-    font-size: 48px;
-    opacity: 0.5;
-}
-
-.card-title {
-    margin-bottom: 0.5rem;
-}
-
-/* Динамические стили будут применены через JS */
-.result-card {
-    transition: all 0.3s ease;
-}
-
-.result-card:hover {
-    transform: translateY(-10px);
-}
-
-.legendary-crowns {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-}
-
-.legendary-crowns i {
-    color: #ffd700;
-    font-size: 16px;
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
-}
-/* =========================================
-   CARD DETAIL STYLES
-   ========================================= */
-
-/* Контейнер детальной страницы карточки */
+/* ----- ДЕТАЛИ КАРТЫ ----- */
 .card-detail-container {
     max-width: 800px;
     margin: 0 auto;
 }
 
-/* Заголовок карточки */
-.card-detail-title {
-    color: #e0b3ff;
-    text-shadow: 0 0 15px rgba(200, 0, 255, 0.5);
-    font-weight: bold;
-}
-
-.card-badges {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-/* Изображение карточки */
 .card-detail-image {
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
-}
-
-.card-detail-image:hover {
-    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
 }
 
 .card-detail-img {
     width: 100%;
     height: auto;
-    max-height: 400px;
-    object-fit: cover;
+    display: block;
 }
 
 .card-detail-placeholder {
-    background: #6c757d;
-    height: 300px;
+    width: 100%;
+    height: 400px;
+    background: linear-gradient(135deg, var(--space-medium), var(--space-dark));
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: var(--border-radius);
 }
 
 .placeholder-icon {
-    font-size: 64px;
-    opacity: 0.5;
-    color: white;
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.3);
 }
 
-/* Секция описания */
-.card-description {
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-
-.section-title {
-    color: #d8aaff;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-}
-
-.description-text {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* Боксы статистики */
 .stat-box {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
     text-align: center;
-    transition: all 0.3s;
+    transition: var(--transition-base);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .stat-box:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-5px);
-    border-color: rgba(200, 100, 255, 0.4);
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.12);
 }
 
-.strength-box .stat-value {
-    color: #ff6b6b;
+.strength-box {
+    border-bottom: 3px solid #ff6b6b;
 }
 
-.health-box .stat-value {
-    color: #4ecdc4;
+.health-box {
+    border-bottom: 3px solid #4ecdc4;
 }
 
-.defence-box .stat-value {
-    color: #a8e6cf;
+.defence-box {
+    border-bottom: 3px solid #667eea;
 }
 
 .stat-value {
-    font-size: 28px;
+    font-size: 2.5rem;
     font-weight: bold;
-    margin-bottom: 5px;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 0.5rem;
 }
 
 .stat-label {
-    font-size: 14px;
-    opacity: 0.8;
+    color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-size: 0.9rem;
 }
 
-/* Бокс общей силы */
 .total-power-box {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 10px;
-    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50px;
+    padding: 1rem 2rem;
     text-align: center;
-    margin-top: 20px;
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-    animation: glowPulse 3s infinite;
-}
-
-@keyframes glowPulse {
-    0% { box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
-    50% { box-shadow: 0 5px 30px rgba(102, 126, 234, 0.7); }
-    100% { box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
+    display: inline-block;
+    margin: 1rem auto;
 }
 
 .total-power-value {
-    font-size: 36px;
+    font-size: 2rem;
     font-weight: bold;
-    color: #ffd700;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    font-family: 'Orbitron', sans-serif;
 }
 
 .total-power-label {
-    font-size: 16px;
-    opacity: 0.9;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: white;
-}
-
-/* Информационные строки */
-.card-info {
-    padding: 10px;
-}
-
-.info-item {
-    margin-bottom: 10px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.info-item i {
-    width: 20px;
-    text-align: center;
-}
-
-.coin-icon {
-    color: #ffd700;
-}
-
-.status-icon.active {
-    color: #00ff00;
-}
-
-.status-icon.inactive {
-    color: #ff0000;
-}
-
-.status-active {
-    color: #00ff00;
-    font-weight: bold;
-}
-
-.status-inactive {
-    color: #ff0000;
-    font-weight: bold;
-}
-
-/* Кнопки действий */
-.action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.btn-action {
-    padding: 12px 30px;
-    margin: 5px;
-    border-radius: 10px;
-    font-weight: bold;
-    transition: all 0.3s;
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    opacity: 0.9;
 }
 
-.btn-action:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+/* ----- ИСТОРИЯ ----- */
+.history-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    transition: var(--transition-base);
+    border-left: 3px solid transparent;
 }
 
-/* Адаптивность */
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.history-item:has(.victory-badge) {
+    border-left-color: var(--success-color);
+}
+
+.history-item:has(.defeat-badge) {
+    border-left-color: var(--danger-color);
+}
+
+.victory-badge {
+    background: rgba(78, 205, 196, 0.3);
+    color: var(--success-color);
+}
+
+.defeat-badge {
+    background: rgba(255, 107, 107, 0.3);
+    color: var(--danger-color);
+}
+
+/* ----- ПАГИНАЦИЯ ----- */
+.pagination {
+    gap: 5px;
+}
+
+.page-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: var(--border-radius-sm) !important;
+    padding: 0.5rem 1rem;
+    transition: var(--transition-base);
+}
+
+.page-link:hover {
+    background: rgba(102, 126, 234, 0.3);
+    border-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-color: var(--primary-color);
+}
+
+/* ----- САЙДБАР ----- */
+.sidebar {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.points-card {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+}
+
+/* ----- ИНДИКАТОР ЗАГРУЗКИ ----- */
+#loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+/* ----- АДАПТИВНЫЙ ДИЗАЙН ----- */
+
+/* Планшеты */
 @media (max-width: 768px) {
-    .card-detail-container {
-        padding: 0 15px;
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
     }
     
-    .card-detail-title {
+    h1 {
         font-size: 2rem;
     }
     
-    .stat-value {
-        font-size: 22px;
+    .display-4 {
+        font-size: 2.5rem;
     }
     
-    .total-power-value {
-        font-size: 28px;
-    }
-    
-    .btn-action {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-    
-    .card-detail-placeholder {
-        height: 250px;
-    }
-}
-
-@media (max-width: 576px) {
-    .card-detail-title {
-        font-size: 1.8rem;
+    .gacha-banner {
+        padding: 2rem 1rem;
     }
     
     .stat-box {
-        padding: 10px;
+        padding: 1rem;
     }
     
     .stat-value {
-        font-size: 18px;
+        font-size: 1.8rem;
     }
     
-    .stat-label {
-        font-size: 12px;
+    .card-detail-img {
+        max-height: 300px;
+        object-fit: cover;
     }
     
-    .action-buttons {
-        flex-direction: column;
+    .total-power-box {
+        padding: 0.8rem 1.5rem;
     }
     
-    .btn-action {
-        width: 100%;
-        margin: 5px 0;
+    .total-power-value {
+        font-size: 1.5rem;
     }
+}
+
+/* Мобильные устройства */
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .card-img-top {
+        height: 150px;
+    }
+    
+    .gacha-option {
+        padding: 1rem;
+    }
+    
+    .gacha-option h4 {
+        font-size: 1.2rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-card-small {
+        padding: 0.8rem;
+    }
+    
+    .stat-card-small i {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card-small h4 {
+        font-size: 1.2rem;
+    }
+    
+    .cosmic-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .points-card {
+        padding: 1.5rem;
+    }
+    
+    .history-item {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Улучшение для форм на мобильных */
+    .form-control, .form-select {
+        font-size: 16px; /* Предотвращает зум на iOS */
+        padding: 8px 12px;
+    }
+    
+    /* Улучшение для таблиц */
+    .table {
+        font-size: 0.85rem;
+    }
+    
+    /* Скрываем некоторые элементы на мобильных */
+    .hide-mobile {
+        display: none;
+    }
+}
+
+/* Очень маленькие устройства */
+@media (max-width: 375px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .gacha-option .h4 {
+        font-size: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* ----- УТИЛИТЫ ----- */
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.opacity-75 {
+    opacity: 0.75;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.position-relative {
+    position: relative;
+}
+
+/* Анимации для элементов */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Стили для редких элементов */
+.rarity-common {
+    color: var(--rarity-common);
+}
+
+.rarity-rare {
+    color: var(--rarity-rare);
+}
+
+.rarity-epic {
+    color: var(--rarity-epic);
+}
+
+.rarity-legendary {
+    color: var(--rarity-legendary);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+/* Для Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) rgba(255, 255, 255, 0.05);
 }

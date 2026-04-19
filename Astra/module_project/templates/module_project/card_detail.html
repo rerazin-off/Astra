@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% verbatim %}{{ card.title }}{% endverbatim %} | Космическая ККИ</title>
+    <title>{{ card.title }} | Космическая ККИ</title>
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -45,18 +45,14 @@
                     <h1 class="display-4 mb-2 card-detail-title">{{ card.title }}</h1>
                     <div class="card-badges">
                         {% if card.rarity %}
-                            {% with rarity_color=card.rarity.color %}
-                            <!-- <span class="badge fs-5 mb-2" style="background: {{ rarity_color }};">
+                            <span class="badge fs-6 mb-2 text-white" style="background-color: {{ card.rarity.color|default:'#6c757d' }};">
                                 {{ card.rarity.name }}
-                            </span> -->
-                            {% endwith %}
+                            </span>
                         {% endif %}
                         {% if card.attribute %}
-                            {% with attr_color=card.attribute.color %}
-                            <!-- <span class="badge fs-5 ms-2" style="background: {{ attr_color }};">
-                                <i class="fas fa-fire me-1"></i>{{ card.attribute.name }}
-                            </span> -->
-                            {% endwith %}
+                            <span class="badge fs-6 ms-2 text-white" style="background-color: {{ card.attribute.color|default:'#6c757d' }};">
+                                <i class="fas fa-bolt me-1"></i>{{ card.attribute.name }}
+                            </span>
                         {% endif %}
                     </div>
                 </div>
@@ -141,7 +137,7 @@
                         {% if card.author %}
                             <p class="info-item">
                                 <i class="fas fa-user me-2"></i>
-                                <strong>Автор:</strong> {{ card.author.nikname }}
+                                <strong>Автор:</strong> {{ card.author.get_username }}
                             </p>
                         {% endif %}
                         <p class="info-item">

@@ -2,7 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
-
+from django.db import models
+from django.contrib.auth.models import User 
 # Create your models here.
 
 class Attribute(models.Model):
@@ -135,6 +136,11 @@ class Rarity(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if self.color and not self.color.startswith('#'):
+            self.color = '#' + self.color
+        super().save(*args, **kwargs)
+
 
 class Cards(models.Model):
     """
@@ -201,7 +207,7 @@ class Cards(models.Model):
     )
     
     author = models.ForeignKey(
-        Users_System, 
+        User, 
         on_delete=models.SET_NULL,  
         null=True,
         blank=True,

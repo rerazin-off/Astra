@@ -1,8 +1,9 @@
 
-from gettext import translation
+from django.db import transaction as db_transaction
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from django.db.models import Q
@@ -130,26 +131,21 @@ def profile_edit(request):
     
     return render(request, 'module_project/profile_edit.html', {'form': form, 'user': user})
 
+@login_required
 def create_card(request):
-    """Создание новой карточки"""
-    if 'user_id' not in request.session:
-        messages.warning(request, 'Войдите в систему')
-        return redirect('module_project:login')
-    
-    user = Users_System.objects.get(id=request.session['user_id'])
-    
     if request.method == 'POST':
         form = CardForm(request.POST, request.FILES)
         if form.is_valid():
+            # Автоматическое назначение автора
             card = form.save(commit=False)
-            card.author = user
+            card.author = request.user
             card.save()
-            messages.success(request, f'Карточка "{card.title}" успешно создана!')
-            return redirect('module_project:card_detail', card_id=card.id)
+            messages.success(request, 'Карта успешно создана!')
+            return redirect('module_project:card_detail', pk=card.pk)
     else:
         form = CardForm()
-    
     return render(request, 'module_project/create_card.html', {'form': form})
+
 
 def card_catalog(request):
     """Каталог всех карточек"""
@@ -235,7 +231,7 @@ def gacha(request):
             user.save()
             
             obtained_cards = []
-            with translation.atomic():
+            with db_transaction.atomic():
                 for _ in range(pulls):
                     card = random.choices(
                         [c[0] for c in cards_with_weights],
@@ -270,9 +266,13 @@ def gacha(request):
                 messages.success(request, f'Открыто {pulls} карточек! Новых: {len(new_cards)}, всего уникальных: {len(unique_cards)}')
             
             request.session['last_gacha_result'] = {
-                'cards': [{'id': c.id, 'title': c.title, 'rarity': c.rarity.name if c.rarity else 'Обычная', 
-                          'cover_image': c.cover_image.url if c.cover_image else None} 
-                         for c in obtained_cards],
+                'cards': [{
+                    'id': c.id,
+                    'title': c.title,
+                    'rarity': c.rarity.name if c.rarity else 'Обычная',
+                    'rarity_color': c.rarity.color if c.rarity else '#6c757d',
+                    'cover_image': c.cover_image.url if c.cover_image else None,
+                } for c in obtained_cards],
                 'cost': cost,
                 'pulls': pulls
             }
@@ -322,11 +322,44 @@ def my_collection(request):
     
     rarities = Rarity.objects.all()
     attributes = Attribute.objects.filter(is_active=True)
-    
+
+    total_count = inventory.count()
+    legendary_count = inventory.filter(card__rarity__name__icontains='легенд').count()
+    epic_count = inventory.filter(card__rarity__name__icontains='эпич').count()
+    rare_count = inventory.filter(card__rarity__name__icontains='редк').count()
+
+    collection_cards_payload = []
+    for inv in inventory:
+        c = inv.card
+        r = c.rarity
+        a = c.attribute
+        collection_cards_payload.append({
+            'inventory_id': inv.id,
+            'card_id': c.id,
+            'title': c.title,
+            'description': c.description or '',
+            'cover_url': c.cover_image.url if c.cover_image else '',
+            'rarity_name': r.name if r else '',
+            'rarity_color': r.color if r else '#6c757d',
+            'attribute_name': a.name if a else '',
+            'attribute_color': a.color if a else '',
+            'strength': c.strenth or 0,
+            'health': c.health or 0,
+            'defence': c.defence or 0,
+            'obtained_at': inv.obtained_at.isoformat() if inv.obtained_at else '',
+            'quantity': inv.quantity,
+        })
+
     context = {
         'inventory': inventory,
+        'user_cards': inventory,
         'rarities': rarities,
         'attributes': attributes,
+        'total_count': total_count,
+        'legendary_count': legendary_count,
+        'epic_count': epic_count,
+        'rare_count': rare_count,
+        'collection_cards_payload': collection_cards_payload,
     }
     return render(request, 'module_project/my_collection.html', context)
 
@@ -336,8 +369,6 @@ def edit_card(request, card_id):
 def delete_card(request, card_id):
     return HttpResponse(f"Удаление карточки {card_id} - в разработке")
 
-def gacha(request):
-    return HttpResponse("Гача - в разработке")
 
 def battle(request):
     return HttpResponse("Бой с роботом - в разработке")

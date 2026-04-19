@@ -1,0 +1,274 @@
+{% extends 'module_project/base.html' %}
+{% load static %}
+
+{% block title %}Моя коллекция | Космическая ККИ{% endblock %}
+
+{% block content %}
+{{ collection_cards_payload|json_script:"collection-cards-data" }}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="fas fa-id-card me-2"></i>
+            Моя коллекция карт
+        </h1>
+        <div>
+            <a href="{% url 'module_project:gacha' %}" class="btn btn-warning">
+                <i class="fas fa-dice-d6 me-2"></i>Открыть гачу
+            </a>
+            <a href="{% url 'module_project:card_catalog' %}" class="btn btn-primary ms-2">
+                <i class="fas fa-layer-group me-2"></i>В каталог
+            </a>
+        </div>
+    </div>
+    
+    <!-- Статистика коллекции -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card-small">
+                <i class="fas fa-layer-group text-primary"></i>
+                <div>
+                    <h4 id="collection-total-count">{{ total_count }}</h4>
+                    <small>Всего карт</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-small">
+                <i class="fas fa-crown text-warning"></i>
+                <div>
+                    <h4>{{ legendary_count }}</h4>
+                    <small>Легендарных</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-small">
+                <i class="fas fa-gem text-info"></i>
+                <div>
+                    <h4>{{ epic_count }}</h4>
+                    <small>Эпических</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-small">
+                <i class="fas fa-star text-success"></i>
+                <div>
+                    <h4>{{ rare_count }}</h4>
+                    <small>Редких</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Поиск и фильтры для коллекции -->
+    <div class="cosmic-card p-3 mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" id="collection-search" class="form-control" 
+                           placeholder="Поиск по названию...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select id="collection-rarity-filter" class="form-control">
+                    <option value="">Все редкости</option>
+                    <option value="Обычная">Обычная</option>
+                    <option value="Редкая">Редкая</option>
+                    <option value="Эпическая">Эпическая</option>
+                    <option value="Легендарная">Легендарная</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="collection-sort" class="form-control">
+                    <option value="newest">Сначала новые</option>
+                    <option value="oldest">Сначала старые</option>
+                    <option value="power">По силе</option>
+                    <option value="rarity">По редкости</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Сетка карт коллекции -->
+    <div id="collection-container" class="row g-4">
+        {% for user_card in user_cards %}
+            <div class="col-md-3 col-sm-6 collection-item" 
+                 data-inventory-id="{{ user_card.id }}"
+                 data-title="{{ user_card.card.title|lower }}"
+                 data-rarity="{{ user_card.card.rarity.name|default:'' }}"
+                 data-power="{{ user_card.card.strenth|default:0|add:user_card.card.health|default:0|add:user_card.card.defence|default:0 }}"
+                 data-date="{{ user_card.obtained_at|date:'Y-m-d H:i:s' }}">
+                <div class="cosmic-card h-100 position-relative collection-card-tile" role="button" tabindex="0"
+                     aria-label="Открыть карточку {{ user_card.card.title }}">
+                    
+                    {% if user_card.card.cover_image %}
+                        <img src="{{ user_card.card.cover_image.url }}" class="card-img-top" alt="{{ user_card.card.title }}">
+                    {% else %}
+                        <div class="card-placeholder-small">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="p-3">
+                        <h5 class="card-title">{{ user_card.card.title }}</h5>
+                        
+                        {% if user_card.card.rarity %}
+                            <span class="badge mb-2 text-white" style="background-color: {{ user_card.card.rarity.color|default:'#6c757d' }};">
+                                {{ user_card.card.rarity.name }}
+                            </span>
+                        {% endif %}
+                        {% if user_card.card.attribute %}
+                            <span class="badge mb-2 ms-1 text-white" style="background-color: {{ user_card.card.attribute.color|default:'#6c757d' }};">
+                                {{ user_card.card.attribute.name }}
+                            </span>
+                        {% endif %}
+                        
+                        <div class="card-stats mt-2">
+                            <small class="d-block">
+                                <i class="fas fa-fist-raised"></i> {{ user_card.card.strenth|default:0 }}
+                                <i class="fas fa-heart ms-2"></i> {{ user_card.card.health|default:0 }}
+                                <i class="fas fa-shield-alt ms-2"></i> {{ user_card.card.defence|default:0 }}
+                            </small>
+                        </div>
+                        
+                        <div class="small text-muted mt-2">
+                            <i class="far fa-calendar-alt me-1"></i>
+                            {{ user_card.obtained_at|date:"d.m.Y" }}
+                            {% if user_card.quantity > 1 %}
+                                <span class="ms-1">×{{ user_card.quantity }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mt-3 d-grid gap-2">
+                            <button type="button" class="btn btn-outline-light btn-sm w-100 btn-collection-modal"
+                                    data-inventory-id="{{ user_card.id }}">
+                                <i class="fas fa-expand-alt me-1"></i>Подробнее
+                            </button>
+                            <a href="{% url 'module_project:card_detail' user_card.card.id %}" 
+                               class="btn btn-outline-secondary btn-sm w-100">
+                                <i class="fas fa-external-link-alt me-1"></i>Страница карты
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-dice-d6 fa-4x mb-3 opacity-50"></i>
+                    <h3>У вас пока нет карт</h3>
+                    <p class="text-muted">Откройте гачу или получите карты в боях!</p>
+                    <div class="mt-4">
+                        <a href="{% url 'module_project:gacha' %}" class="btn btn-warning btn-lg me-3">
+                            <i class="fas fa-dice-d6 me-2"></i>Открыть гачу
+                        </a>
+                        <a href="{% url 'module_project:card_catalog' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-layer-group me-2"></i>В каталог
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Модальное окно: детали карты из коллекции -->
+<div class="modal fade" id="collectionCardModal" tabindex="-1" aria-labelledby="collectionCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content cosmic-modal-content">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="collectionCardModalLabel">Карточка</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-5 text-center">
+                        <div id="collection-modal-image-wrap" class="rounded overflow-hidden bg-dark bg-opacity-25">
+                            <img id="collection-modal-image" src="" alt="" class="img-fluid w-100 d-none">
+                            <div id="collection-modal-no-image" class="py-5 text-muted d-none">
+                                <i class="fas fa-image fa-3x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h4 id="collection-modal-title" class="mb-2"></h4>
+                        <div class="mb-3" id="collection-modal-badges"></div>
+                        <p class="text-muted small mb-2"><i class="far fa-calendar-alt me-1"></i><span id="collection-modal-obtained"></span></p>
+                        <p class="small mb-3"><strong>В коллекции:</strong> <span id="collection-modal-qty"></span></p>
+                        <div class="row g-2 mb-3">
+                            <div class="col-4">
+                                <div class="p-2 rounded text-center" style="background: rgba(255,255,255,0.08);">
+                                    <div class="small text-muted">Сила</div>
+                                    <div class="fw-bold" id="collection-modal-str"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded text-center" style="background: rgba(255,255,255,0.08);">
+                                    <div class="small text-muted">Здоровье</div>
+                                    <div class="fw-bold" id="collection-modal-hp"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded text-center" style="background: rgba(255,255,255,0.08);">
+                                    <div class="small text-muted">Защита</div>
+                                    <div class="fw-bold" id="collection-modal-def"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="collection-modal-desc-wrap" class="d-none">
+                            <h6 class="text-uppercase text-muted small">Описание</h6>
+                            <p id="collection-modal-desc" class="mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <a href="#" id="collection-modal-detail-link" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt me-1"></i>Открыть страницу карты
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-card-small {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.stat-card-small i {
+    font-size: 32px;
+}
+.stat-card-small h4 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+.stat-card-small small {
+    color: rgba(255, 255, 255, 0.7);
+}
+.collection-card-tile {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.collection-card-tile:hover {
+    transform: translateY(-2px);
+}
+.cosmic-modal-content {
+    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.12);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'module_project/js/collection.js' %}"></script>
+{% endblock %}

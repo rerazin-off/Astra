@@ -82,7 +82,7 @@
                     <h5 class="mb-2 card-title">{{ card.title }}</h5>
 
                     {% if card.rarity %}
-                    <span class="badge mb-2 card-rarity">{{ card.rarity }}</span>
+                    <span class="badge mb-2 card-rarity text-white" style="background-color: {{ card.rarity_color|default:'#6c757d' }};">{{ card.rarity }}</span>
                     {% endif %}
 
                     {% if card.rarity == 'Легендарная' %}

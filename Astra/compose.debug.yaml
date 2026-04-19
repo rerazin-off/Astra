@@ -1,0 +1,10 @@
+services:
+  astra:
+    image: astra
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8090 --nothreading --noreload"]
+    ports:
+      - 8090:8090
+      - 5678:5678
