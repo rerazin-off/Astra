@@ -41,6 +41,19 @@ CSRF_TRUSTED_ORIGINS = [
     if o.strip()
 ]
 
+CSRF_TRUSTED_ORIGINS.extend([
+    'https://uncoddled-miquel-wabbly.ngrok-free.dev',
+    'https://*.ngrok-free.dev',
+    'https://*.ngrok.io',
+    'https://uncoddled-miquel-wabbly.ngrok-free.dev//*',
+])
+
+ALLOWED_HOSTS.extend([
+    'uncoddled-miquel-wabbly.ngrok-free.dev',
+    '.ngrok-free.dev',
+    '.ngrok.io',
+])
+
 
 # Application definition
 
@@ -53,7 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'module_project', 
 ]
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

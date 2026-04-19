@@ -124,12 +124,11 @@
                             <div class="form-check">
                                 {{ form.is_active }}
                                 <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
-                                    <i class="fas fa-check-circle me-1"></i>Активна
+                                    <!-- <i class="fas fa-check-circle me-1"></i>Активна -->
                                 </label>
                             </div>
                         </div>
                         
-                        <!-- Информация об авторе (автоматически) -->
                         <div class="alert alert-info">
                             <i class="fas fa-user me-2"></i>
                             <strong>Автор карты:</strong> {{ user.nikname }} (назначается автоматически)
@@ -175,7 +174,7 @@ document.getElementById('create-card-form').addEventListener('submit', function(
     const defence = parseInt(document.getElementById('{{ form.defence.id_for_label }}').value) || 0;
     const total = strength + health + defence;
     
-    if (total > 100) {
+    if (total > 1000) {
         e.preventDefault();
         alert('Сумма характеристик не может превышать 100!');
     }
