@@ -4,8 +4,8 @@ from .models import Attribute, Cards, Rarity, User_Inventory, Users_System
 class CardForm(forms.ModelForm):
     class Meta:
         model=Cards
-        fields=['title','cover_image','description','strenth',
-        'health','defence','attribute','rarity','price_points','author','is_active']
+        fields=['title', 'cover_image', 'description', 'strenth',
+                'health', 'defence', 'attribute', 'rarity', 'price_points', 'is_active']
         """
         """
         widgets={
@@ -50,9 +50,6 @@ class CardForm(forms.ModelForm):
             'price_points': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Стоимость карточки'
-            }),
-            'author': forms.Select(attrs={
-                'class': 'form-control'  
             }),
             'is_active': forms.CheckboxInput(attrs={
                 'class': 'form-control'

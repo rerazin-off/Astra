@@ -1,3 +1,6 @@
-# To ensure app dependencies are ported from your virtual environment/host machine into your container, run 'pip freeze > requirements.txt' in the terminal to overwrite this file
-django==5.0.1
-gunicorn==21.2.0
+asgiref==3.11.1
+Django==6.0.3
+gunicorn==23.0.0
+pillow==12.2.0
+sqlparse==0.5.5
+tzdata==2025.3

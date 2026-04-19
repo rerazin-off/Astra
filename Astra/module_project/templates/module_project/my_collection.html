@@ -4,6 +4,7 @@
 {% block title %}Моя коллекция | Космическая ККИ{% endblock %}
 
 {% block content %}
+<form class="d-none" aria-hidden="true">{% csrf_token %}</form>
 {{ collection_cards_payload|json_script:"collection-cards-data" }}
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -11,51 +12,24 @@
             <i class="fas fa-id-card me-2"></i>
             Моя коллекция карт
         </h1>
-        <div>
-            <a href="{% url 'module_project:gacha' %}" class="btn btn-warning">
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'module_project:gacha' %}" class="btn btn-mystic-accent">
                 <i class="fas fa-dice-d6 me-2"></i>Открыть гачу
             </a>
-            <a href="{% url 'module_project:card_catalog' %}" class="btn btn-primary ms-2">
+            <a href="{% url 'module_project:card_catalog' %}" class="btn btn-mystic-outline">
                 <i class="fas fa-layer-group me-2"></i>В каталог
             </a>
         </div>
     </div>
     
     <!-- Статистика коллекции -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card-small">
-                <i class="fas fa-layer-group text-primary"></i>
+    <div class="row g-3 mb-4 justify-content-center">
+        <div class="col-md-4 col-lg-3">
+            <div class="stat-card-small stat-card-small--solo">
+                <i class="fas fa-layer-group stat-card-small__icon"></i>
                 <div>
                     <h4 id="collection-total-count">{{ total_count }}</h4>
-                    <small>Всего карт</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card-small">
-                <i class="fas fa-crown text-warning"></i>
-                <div>
-                    <h4>{{ legendary_count }}</h4>
-                    <small>Легендарных</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card-small">
-                <i class="fas fa-gem text-info"></i>
-                <div>
-                    <h4>{{ epic_count }}</h4>
-                    <small>Эпических</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card-small">
-                <i class="fas fa-star text-success"></i>
-                <div>
-                    <h4>{{ rare_count }}</h4>
-                    <small>Редких</small>
+                    <small>Всего карт в коллекции</small>
                 </div>
             </div>
         </div>
@@ -74,10 +48,9 @@
             <div class="col-md-3">
                 <select id="collection-rarity-filter" class="form-control">
                     <option value="">Все редкости</option>
-                    <option value="Обычная">Обычная</option>
-                    <option value="Редкая">Редкая</option>
-                    <option value="Эпическая">Эпическая</option>
-                    <option value="Легендарная">Легендарная</option>
+                    {% for rarity in rarities %}
+                    <option value="{{ rarity.id }}">{{ rarity.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-3">
@@ -97,8 +70,9 @@
             <div class="col-md-3 col-sm-6 collection-item" 
                  data-inventory-id="{{ user_card.id }}"
                  data-title="{{ user_card.card.title|lower }}"
-                 data-rarity="{{ user_card.card.rarity.name|default:'' }}"
-                 data-power="{{ user_card.card.strenth|default:0|add:user_card.card.health|default:0|add:user_card.card.defence|default:0 }}"
+                 data-rarity-id="{% if user_card.card.rarity %}{{ user_card.card.rarity.id }}{% endif %}"
+                 data-rarity-order="{% if user_card.card.rarity %}{{ user_card.card.rarity.order }}{% else %}0{% endif %}"
+                 data-power="{{ user_card.card.get_total_power }}"
                  data-date="{{ user_card.obtained_at|date:'Y-m-d H:i:s' }}">
                 <div class="cosmic-card h-100 position-relative collection-card-tile" role="button" tabindex="0"
                      aria-label="Открыть карточку {{ user_card.card.title }}">
@@ -115,12 +89,12 @@
                         <h5 class="card-title">{{ user_card.card.title }}</h5>
                         
                         {% if user_card.card.rarity %}
-                            <span class="badge mb-2 text-white" style="background-color: {{ user_card.card.rarity.color|default:'#6c757d' }};">
+                            <span class="badge mb-2 text-white" data-badge-bg="{{ user_card.card.rarity.color|default:'#6c757d' }}">
                                 {{ user_card.card.rarity.name }}
                             </span>
                         {% endif %}
                         {% if user_card.card.attribute %}
-                            <span class="badge mb-2 ms-1 text-white" style="background-color: {{ user_card.card.attribute.color|default:'#6c757d' }};">
+                            <span class="badge mb-2 ms-1 text-white" data-badge-bg="{{ user_card.card.attribute.color|default:'#6c757d' }}">
                                 {{ user_card.card.attribute.name }}
                             </span>
                         {% endif %}
@@ -160,11 +134,11 @@
                     <i class="fas fa-dice-d6 fa-4x mb-3 opacity-50"></i>
                     <h3>У вас пока нет карт</h3>
                     <p class="text-muted">Откройте гачу или получите карты в боях!</p>
-                    <div class="mt-4">
-                        <a href="{% url 'module_project:gacha' %}" class="btn btn-warning btn-lg me-3">
+                    <div class="mt-4 d-flex flex-wrap justify-content-center gap-2">
+                        <a href="{% url 'module_project:gacha' %}" class="btn btn-mystic-accent btn-lg">
                             <i class="fas fa-dice-d6 me-2"></i>Открыть гачу
                         </a>
-                        <a href="{% url 'module_project:card_catalog' %}" class="btn btn-primary btn-lg">
+                        <a href="{% url 'module_project:card_catalog' %}" class="btn btn-mystic-outline btn-lg">
                             <i class="fas fa-layer-group me-2"></i>В каталог
                         </a>
                     </div>
@@ -199,19 +173,19 @@
                         <p class="small mb-3"><strong>В коллекции:</strong> <span id="collection-modal-qty"></span></p>
                         <div class="row g-2 mb-3">
                             <div class="col-4">
-                                <div class="p-2 rounded text-center" style="background: rgba(255,255,255,0.08);">
+                                <div class="p-2 rounded text-center collection-modal-stat">
                                     <div class="small text-muted">Сила</div>
                                     <div class="fw-bold" id="collection-modal-str"></div>
                                 </div>
                             </div>
                             <div class="col-4">
-                                <div class="p-2 rounded text-center" style="background: rgba(255,255,255,0.08);">
+                                <div class="p-2 rounded text-center collection-modal-stat">
                                     <div class="small text-muted">Здоровье</div>
                                     <div class="fw-bold" id="collection-modal-hp"></div>
                                 </div>
                             </div>
                             <div class="col-4">
-                                <div class="p-2 rounded text-center" style="background: rgba(255,255,255,0.08);">
+                                <div class="p-2 rounded text-center collection-modal-stat">
                                     <div class="small text-muted">Защита</div>
                                     <div class="fw-bold" id="collection-modal-def"></div>
                                 </div>
@@ -221,12 +195,16 @@
                             <h6 class="text-uppercase text-muted small">Описание</h6>
                             <p id="collection-modal-desc" class="mb-0"></p>
                         </div>
+                        <p class="small mt-3 mb-0" id="collection-modal-refund-hint"></p>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer border-secondary">
+            <div class="modal-footer border-secondary flex-wrap gap-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <a href="#" id="collection-modal-detail-link" class="btn btn-primary">
+                <button type="button" class="btn btn-outline-danger d-none" id="collection-modal-delete-btn">
+                    <i class="fas fa-trash-alt me-1"></i>Удалить из коллекции
+                </button>
+                <a href="#" id="collection-modal-detail-link" class="btn btn-mystic-accent">
                     <i class="fas fa-external-link-alt me-1"></i>Открыть страницу карты
                 </a>
             </div>
@@ -234,39 +212,6 @@
     </div>
 </div>
 
-<style>
-.stat-card-small {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-.stat-card-small i {
-    font-size: 32px;
-}
-.stat-card-small h4 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: bold;
-}
-.stat-card-small small {
-    color: rgba(255, 255, 255, 0.7);
-}
-.collection-card-tile {
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.collection-card-tile:hover {
-    transform: translateY(-2px);
-}
-.cosmic-modal-content {
-    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 100%);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.12);
-}
-</style>
 {% endblock %}
 
 {% block extra_js %}

@@ -9,59 +9,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'module_project/css/style.css' %}">
-    <style>
-        .result-card {
-            animation: revealCard 0.8s ease-out;
-            transition: transform 0.3s;
-        }
-
-        .result-card:hover {
-            transform: translateY(-10px);
-        }
-
-        @keyframes revealCard {
-            0% {
-                transform: scale(0) rotateY(0deg);
-                opacity: 0;
-            }
-
-            50% {
-                transform: scale(1.1) rotateY(180deg);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(1) rotateY(360deg);
-                opacity: 1;
-            }
-        }
-
-        .legendary-glow {
-            animation: legendaryPulse 2s infinite;
-        }
-
-        @keyframes legendaryPulse {
-            0% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            }
-
-            50% {
-                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
-            }
-
-            100% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            }
-        }
-    </style>
 </head>
 
 <body>
     <div class="container py-5">
         <div class="text-center mb-5">
-            <i class="fas fa-dice-d6" style="font-size: 64px; color: #ffd700; margin-bottom: 20px;"></i>
+            <i class="fas fa-dice-d6 icon-gacha-hero"></i>
             <h1 class="display-4 fw-bold">Результаты открытия!</h1>
-            <p class="lead">Потрачено очков: <span class="fw-bold" style="color: #ffd700;">{{ result.cost }}</span></p>
+            <p class="lead">Потрачено очков: <span class="fw-bold text-accent-gold">{{ result.cost }}</span></p>
         </div>
 
         <div class="row g-4">
@@ -70,19 +25,20 @@
                 <div class="cosmic-card p-3 text-center result-card" data-rarity="{{ card.rarity }}"
                     data-index="{{ forloop.counter0 }}">
 
-                    {% if card.cover_image %}
-                    <img src="{{ card.cover_image }}" class="img-fluid rounded mb-3 card-cover" alt="{{ card.title }}">
-                    {% else %}
-                    <div
-                        class="bg-secondary rounded mb-3 d-flex align-items-center justify-content-center card-placeholder">
-                        <i class="fas fa-image card-placeholder-icon"></i>
+                    <div class="gacha-result-card__image-wrap">
+                        {% if card.cover_image %}
+                        <img src="{{ card.cover_image }}" class="gacha-result-card__image" alt="{{ card.title }}">
+                        {% else %}
+                        <div class="gacha-result-card__placeholder">
+                            <i class="fas fa-image" aria-hidden="true"></i>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
 
                     <h5 class="mb-2 card-title">{{ card.title }}</h5>
 
                     {% if card.rarity %}
-                    <span class="badge mb-2 card-rarity text-white" style="background-color: {{ card.rarity_color|default:'#6c757d' }};">{{ card.rarity }}</span>
+                    <span class="badge mb-2 card-rarity text-white" data-badge-bg="{{ card.rarity_color|default:'#6c757d' }}">{{ card.rarity }}</span>
                     {% endif %}
 
                     {% if card.rarity == 'Легендарная' %}
@@ -98,18 +54,22 @@
         </div>
 
         <div class="text-center mt-5">
-            <a href="{% url 'module_project:gacha' %}" class="cosmic-btn me-3"
-                style="display: inline-block; width: auto; padding: 12px 40px;">
+            <a href="{% url 'module_project:gacha' %}" class="cosmic-btn cosmic-btn--inline me-3">
                 <i class="fas fa-dice me-2"></i>Открыть ещё
             </a>
-            <a href="{% url 'module_project:my_collection' %}" class="cosmic-btn"
-                style="display: inline-block; width: auto; padding: 12px 40px;">
+            <a href="{% url 'module_project:my_collection' %}" class="cosmic-btn cosmic-btn--inline">
                 <i class="fas fa-layer-group me-2"></i>Моя коллекция
             </a>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('[data-badge-bg]').forEach(function (el) {
+            var c = el.getAttribute('data-badge-bg');
+            if (c) el.style.backgroundColor = c;
+        });
+    </script>
 </body>
 
 </html>

@@ -56,7 +56,7 @@
     
     <!-- Сетка карточек -->
     <div id="cards-container" class="row g-4">
-        {% include 'module_project/includes/cards_grid.html' %}
+        {% include 'module_project/includes/card_grid.html' %}
     </div>
     
     <!-- Пагинация -->
@@ -65,7 +65,7 @@
     </div>
     
     <!-- Кнопка создания карты -->
-    {% if user.is_authenticated %}
+    {% if request.session.user_id %}
     <div class="text-center mt-4">
         <a href="{% url 'module_project:create_card' %}" class="btn btn-success btn-lg">
             <i class="fas fa-plus-circle me-2"></i>Создать новую карту

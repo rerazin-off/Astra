@@ -3,47 +3,45 @@
    =========================================== */
 
 /* ----- ИМПОРТ ШРИФТОВ ----- */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
 
-/* ----- CSS ПЕРЕМЕННЫЕ ----- */
+/* ----- CSS ПЕРЕМЕННЫЕ — тёмная гримуарная фиолетовая тема ----- */
 :root {
-    /* Основные цвета */
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
-    --accent-color: #ffd700;
-    --success-color: #4ecdc4;
-    --danger-color: #ff6b6b;
-    --warning-color: #f39c12;
-    --info-color: #3498db;
-    
-    /* Космическая тема */
-    --space-dark: #0f0c29;
-    --space-medium: #302b63;
-    --space-light: #24243e;
-    --star-color: #ffffff;
-    --nebula-primary: #667eea;
-    --nebula-secondary: #764ba2;
-    
-    /* Редкости карт */
-    --rarity-common: #808080;
-    --rarity-rare: #00ff00;
-    --rarity-epic: #0088ff;
-    --rarity-legendary: #ffd700;
-    
-    /* Размеры */
+    --primary-color: #a855f7;
+    --primary-deep: #7c3aed;
+    --secondary-color: #6b21a8;
+    --accent-color: #d946ef;
+    --accent-soft: #e9d5ff;
+    --success-color: #34d399;
+    --danger-color: #f472b6;
+    --warning-color: #fbbf24;
+    --info-color: #818cf8;
+
+    --space-dark: #050208;
+    --space-medium: #120a1d;
+    --space-light: #1e1035;
+    --space-mist: rgba(168, 85, 247, 0.12);
+    --star-color: #f5f3ff;
+    --nebula-primary: #a855f7;
+    --nebula-secondary: #7c3aed;
+
+    --rarity-common: #9ca3af;
+    --rarity-rare: #34d399;
+    --rarity-epic: #818cf8;
+    --rarity-legendary: #fbbf24;
+
     --header-height: 70px;
     --sidebar-width: 280px;
     --border-radius: 15px;
     --border-radius-lg: 20px;
     --border-radius-sm: 10px;
-    
-    /* Тени */
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-    --shadow-md: 0 4px 8px rgba(0,0,0,0.2);
-    --shadow-lg: 0 10px 40px rgba(102, 126, 234, 0.4);
-    --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.5);
-    
-    /* Анимации */
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 48px rgba(124, 58, 237, 0.35);
+    --shadow-glow: 0 0 28px rgba(168, 85, 247, 0.45);
+    --shadow-glow-strong: 0 0 40px rgba(217, 70, 239, 0.35);
+
     --transition-fast: 0.2s ease;
     --transition-base: 0.3s ease;
     --transition-slow: 0.5s ease;
@@ -58,14 +56,18 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-medium) 50%, var(--space-light) 100%);
-    color: #ffffff;
+    background:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(124, 58, 237, 0.35) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 60% at 100% 50%, rgba(217, 70, 239, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 0% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 45%),
+        linear-gradient(165deg, var(--space-dark) 0%, var(--space-medium) 42%, var(--space-light) 100%);
+    color: #e9d5ff;
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
 }
 
-/* Звездный фон */
+/* Звёзды + лёгкое фиолетовое свечение */
 body::before {
     content: '';
     position: fixed;
@@ -73,57 +75,72 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
-        radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 50px 160px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 160px 120px, #fff, rgba(0,0,0,0));
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(245, 243, 255, 0.85), rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 40px 70px, rgba(233, 213, 255, 0.5), rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 50px 160px, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 90px 40px, rgba(245, 243, 255, 0.6), rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 130px 80px, rgba(233, 213, 255, 0.45), rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 160px 120px, rgba(255, 255, 255, 0.35), rgba(0, 0, 0, 0));
     background-repeat: repeat;
     background-size: 200px 200px;
-    opacity: 0.3;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: -2;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 55%);
     pointer-events: none;
     z-index: -1;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Cinzel', 'Orbitron', serif;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.06em;
+    color: #f5f3ff;
+    text-shadow:
+        0 0 20px rgba(168, 85, 247, 0.5),
+        0 0 40px rgba(124, 58, 237, 0.25);
 }
 
 a {
-    color: var(--primary-color);
+    color: var(--accent-soft);
     text-decoration: none;
     transition: var(--transition-base);
 }
 
 a:hover {
-    color: var(--accent-color);
+    color: #fff;
+    text-shadow: 0 0 12px rgba(217, 70, 239, 0.7);
     text-decoration: none;
 }
 
 /* ----- НАВИГАЦИЯ ----- */
 .navbar {
-    background: rgba(15, 12, 41, 0.95) !important;
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
-    box-shadow: var(--shadow-md);
+    background: rgba(5, 2, 8, 0.92) !important;
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.35);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(124, 58, 237, 0.15);
 }
 
 .navbar-brand {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Cinzel', 'Orbitron', serif;
     font-weight: 700;
-    font-size: 1.5rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    font-size: 1.45rem;
+    background: linear-gradient(135deg, #e9d5ff 0%, var(--primary-color) 45%, var(--accent-color) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.45));
 }
 
 .navbar-nav .nav-link {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(233, 213, 255, 0.88) !important;
     font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius-sm);
@@ -132,19 +149,22 @@ a:hover {
 
 .navbar-nav .nav-link:hover {
     color: #ffffff !important;
-    background: rgba(102, 126, 234, 0.2);
+    background: rgba(168, 85, 247, 0.18);
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.25);
     transform: translateY(-2px);
 }
 
 .navbar-nav .nav-link.active {
-    color: var(--accent-color) !important;
-    background: rgba(255, 215, 0, 0.1);
+    color: #fdf4ff !important;
+    background: rgba(217, 70, 239, 0.15);
+    box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.2);
 }
 
 /* Мобильное меню */
 @media (max-width: 991px) {
     .navbar-collapse {
-        background: rgba(15, 12, 41, 0.98);
+        background: rgba(18, 10, 29, 0.98);
+        border: 1px solid rgba(168, 85, 247, 0.2);
         padding: 1rem;
         border-radius: var(--border-radius);
         margin-top: 1rem;
@@ -153,19 +173,19 @@ a:hover {
 
 /* ----- КАРТОЧКИ ----- */
 .cosmic-card {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(155deg, rgba(30, 16, 53, 0.85) 0%, rgba(18, 10, 29, 0.92) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(168, 85, 247, 0.28);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-md), 0 0 0 1px rgba(124, 58, 237, 0.08) inset;
     transition: var(--transition-base);
     overflow: hidden;
 }
 
 .cosmic-card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    border-color: rgba(217, 70, 239, 0.45);
 }
 
 .card-item {
@@ -180,7 +200,7 @@ a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, transparent, rgba(102, 126, 234, 0.1));
+    background: linear-gradient(135deg, transparent, rgba(168, 85, 247, 0.12));
     opacity: 0;
     transition: var(--transition-base);
     pointer-events: none;
@@ -229,9 +249,9 @@ a:hover {
 
 /* ----- СТАТИСТИКА ----- */
 .stat-card {
-    background: rgba(255, 255, 255, 0.08);
+    background: linear-gradient(160deg, rgba(30, 16, 53, 0.65) 0%, rgba(18, 10, 29, 0.9) 100%);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.22);
     border-radius: var(--border-radius);
     padding: 1.5rem;
     transition: var(--transition-base);
@@ -277,13 +297,31 @@ a:hover {
 }
 
 .stat-card-small small {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(233, 213, 255, 0.75);
     font-size: 0.85rem;
+}
+
+.stat-card-small--solo {
+    justify-content: center;
+    text-align: center;
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    background: linear-gradient(145deg, rgba(30, 16, 53, 0.8), rgba(12, 6, 20, 0.95));
+    box-shadow: var(--shadow-md), 0 0 32px rgba(124, 58, 237, 0.18);
+}
+
+.stat-card-small--solo:hover {
+    border-color: rgba(217, 70, 239, 0.5);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.stat-card-small__icon {
+    color: var(--accent-color) !important;
+    filter: drop-shadow(0 0 10px rgba(217, 70, 239, 0.55));
 }
 
 /* ----- КНОПКИ ----- */
 .cosmic-btn {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-color) 50%, var(--accent-color) 100%);
     color: white;
     border: none;
     padding: 12px 30px;
@@ -293,7 +331,7 @@ a:hover {
     font-size: 1rem;
     cursor: pointer;
     transition: var(--transition-base);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-md), 0 0 20px rgba(168, 85, 247, 0.25);
     text-transform: uppercase;
     letter-spacing: 1px;
     position: relative;
@@ -317,7 +355,7 @@ a:hover {
 
 .cosmic-btn:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-strong);
     color: white;
 }
 
@@ -340,9 +378,55 @@ a:hover {
 }
 
 .btn-action:hover {
-    background: rgba(102, 126, 234, 0.3);
-    border-color: var(--primary-color);
+    background: rgba(168, 85, 247, 0.22);
+    border-color: rgba(217, 70, 239, 0.55);
     color: white;
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Кнопки в стиле коллекции / гримуара */
+.btn-mystic-accent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary-color) 45%, #9333ea 100%);
+    color: #fdf4ff !important;
+    border: 1px solid rgba(217, 70, 239, 0.45);
+    font-weight: 600;
+    padding: 0.5rem 1.35rem;
+    border-radius: 50px;
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.35);
+    transition: var(--transition-base);
+    text-decoration: none !important;
+}
+
+.btn-mystic-accent:hover {
+    color: #fff !important;
+    box-shadow: 0 0 34px rgba(217, 70, 239, 0.45);
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+.btn-mystic-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(18, 10, 29, 0.6);
+    color: var(--accent-soft) !important;
+    border: 1px solid rgba(168, 85, 247, 0.55);
+    font-weight: 600;
+    padding: 0.5rem 1.35rem;
+    border-radius: 50px;
+    transition: var(--transition-base);
+    text-decoration: none !important;
+}
+
+.btn-mystic-outline:hover {
+    color: #fff !important;
+    background: rgba(168, 85, 247, 0.12);
+    border-color: rgba(217, 70, 239, 0.8);
+    box-shadow: 0 0 22px rgba(168, 85, 247, 0.28);
     transform: translateY(-2px);
 }
 
@@ -357,10 +441,10 @@ a:hover {
 }
 
 .form-control:focus, .form-select:focus {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: var(--primary-color);
-    color: white;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(217, 70, 239, 0.65);
+    color: #fdf4ff;
+    box-shadow: 0 0 0 0.2rem rgba(168, 85, 247, 0.28), 0 0 24px rgba(124, 58, 237, 0.2);
 }
 
 .form-control::placeholder {
@@ -371,6 +455,12 @@ a:hover {
     color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
     margin-bottom: 0.5rem;
+}
+
+.input-group-text {
+    background: rgba(30, 16, 53, 0.85);
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    color: var(--accent-soft);
 }
 
 /* ----- АЛЕРТЫ И УВЕДОМЛЕНИЯ ----- */
@@ -418,12 +508,13 @@ a:hover {
 
 /* ----- ГАЧА СИСТЕМА ----- */
 .gacha-banner {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.55) 0%, rgba(88, 28, 135, 0.85) 50%, rgba(30, 16, 53, 0.95) 100%);
     border-radius: var(--border-radius-lg);
     padding: 3rem;
     text-align: center;
     margin-bottom: 2rem;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), 0 0 40px rgba(168, 85, 247, 0.25);
+    border: 1px solid rgba(217, 70, 239, 0.25);
     position: relative;
     overflow: hidden;
 }
@@ -460,9 +551,9 @@ a:hover {
 }
 
 .gacha-option.selected {
-    border-color: var(--accent-color);
-    background: rgba(255, 215, 0, 0.1);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    border-color: rgba(217, 70, 239, 0.75);
+    background: rgba(168, 85, 247, 0.12);
+    box-shadow: 0 0 24px rgba(168, 85, 247, 0.35);
 }
 
 .pull-animation {
@@ -526,6 +617,39 @@ a:hover {
     }
 }
 
+/* Обложки на странице результата гачи — одинаковая область под картинку */
+.gacha-result-card__image-wrap {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gacha-result-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.gacha-result-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--space-medium), var(--space-dark));
+}
+
+.gacha-result-card__placeholder i {
+    font-size: 2.5rem;
+    color: rgba(255, 255, 255, 0.35);
+}
+
 /* ----- ДЕТАЛИ КАРТЫ ----- */
 .card-detail-container {
     max-width: 800px;
@@ -582,7 +706,7 @@ a:hover {
 }
 
 .defence-box {
-    border-bottom: 3px solid #667eea;
+    border-bottom: 3px solid var(--primary-color);
 }
 
 .stat-value {
@@ -669,9 +793,10 @@ a:hover {
 }
 
 .page-link:hover {
-    background: rgba(102, 126, 234, 0.3);
-    border-color: var(--primary-color);
+    background: rgba(168, 85, 247, 0.25);
+    border-color: rgba(217, 70, 239, 0.5);
     color: white;
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.2);
     transform: translateY(-2px);
 }
 
@@ -682,21 +807,23 @@ a:hover {
 
 /* ----- САЙДБАР ----- */
 .sidebar {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(18, 10, 29, 0.55);
     backdrop-filter: blur(10px);
     border-radius: var(--border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
 .points-card {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-    border: 1px solid rgba(255, 215, 0, 0.3);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(217, 70, 239, 0.12));
+    border: 1px solid rgba(168, 85, 247, 0.45);
     border-radius: var(--border-radius);
     padding: 2rem;
+    box-shadow: 0 0 28px rgba(124, 58, 237, 0.2);
 }
 
 /* ----- ИНДИКАТОР ЗАГРУЗКИ ----- */
 #loading-indicator {
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -917,6 +1044,140 @@ a:hover {
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
+/* ----- Перенос инлайн-стилей из шаблонов ----- */
+.icon-gacha-hero {
+    font-size: 64px;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+}
+
+.text-accent-gold {
+    color: var(--accent-color);
+}
+
+.cosmic-btn--inline {
+    display: inline-block;
+    width: auto;
+    padding: 12px 40px;
+}
+
+.icon-gacha-gem {
+    color: var(--accent-color);
+}
+
+.icon-gacha-lavender {
+    color: #a0a0ff;
+}
+
+.text-gacha-price {
+    color: var(--accent-color);
+}
+
+.gacha-history-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.icon-history-card {
+    color: var(--primary-color);
+}
+
+.icon-state-lg {
+    font-size: 48px;
+}
+
+.gacha-rarity-cell {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.gacha-rarity-cell__icon {
+    font-size: 24px;
+}
+
+.gacha-rarity-cell--common .gacha-rarity-cell__icon,
+.gacha-rarity-cell--common .gacha-rarity-cell__percent {
+    color: var(--rarity-common);
+}
+
+.gacha-rarity-cell--rare .gacha-rarity-cell__icon,
+.gacha-rarity-cell--rare .gacha-rarity-cell__percent {
+    color: var(--rarity-rare);
+}
+
+.gacha-rarity-cell--epic .gacha-rarity-cell__icon,
+.gacha-rarity-cell--epic .gacha-rarity-cell__percent {
+    color: var(--rarity-epic);
+}
+
+.gacha-rarity-cell--legendary .gacha-rarity-cell__icon,
+.gacha-rarity-cell--legendary .gacha-rarity-cell__percent {
+    color: var(--rarity-legendary);
+}
+
+.icon-welcome-star {
+    font-size: 48px;
+    color: var(--accent-color);
+}
+
+.stat-card-icon {
+    font-size: 32px;
+}
+
+.stat-card-icon--violet {
+    color: var(--primary-color);
+}
+
+.stat-card-icon--coral {
+    color: #ff6b6b;
+}
+
+.stat-card-icon--teal {
+    color: var(--success-color);
+}
+
+.stat-card-icon--gold {
+    color: var(--accent-color);
+}
+
+.points-card__icon {
+    font-size: 48px;
+}
+
+.catalog-empty-icon {
+    font-size: 48px;
+    opacity: 0.5;
+}
+
+.cover-preview-thumb {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: var(--border-radius-sm);
+}
+
+.profile-header-icon {
+    font-size: 48px;
+}
+
+.collection-modal-stat {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.collection-card-tile {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.collection-card-tile:hover {
+    transform: translateY(-2px);
+}
+
+.cosmic-modal-content {
+    background: linear-gradient(160deg, #12081f 0%, #1e1035 55%, #0d0614 100%);
+    color: #f5f3ff;
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    box-shadow: 0 0 40px rgba(124, 58, 237, 0.25);
+}
+
 /* Кастомный скроллбар */
 ::-webkit-scrollbar {
     width: 10px;
@@ -929,12 +1190,12 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--primary-deep), var(--accent-color));
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
 }
 
 /* Для Firefox */

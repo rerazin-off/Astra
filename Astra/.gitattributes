@@ -1,0 +1,2 @@
+# Скрипты для Linux-контейнера — только LF, иначе «bad interpreter» / странные ошибки.
+*.sh text eol=lf

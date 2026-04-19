@@ -13,13 +13,13 @@
                 <h5 class="card-title">{{ card.title }}</h5>
                 
                 {% if card.rarity %}
-                    <span class="badge mb-2 text-white" style="background-color: {{ card.rarity.color|default:'#6c757d' }};">
+                    <span class="badge mb-2 text-white" data-badge-bg="{{ card.rarity.color|default:'#6c757d' }}">
                         {{ card.rarity.name }}
                     </span>
                 {% endif %}
                 
                 {% if card.attribute %}
-                    <span class="badge mb-2 ms-1 text-white" style="background-color: {{ card.attribute.color|default:'#6c757d' }};">
+                    <span class="badge mb-2 ms-1 text-white" data-badge-bg="{{ card.attribute.color|default:'#6c757d' }}">
                         {{ card.attribute.name }}
                     </span>
                 {% endif %}
@@ -43,7 +43,7 @@
 {% empty %}
     <div class="col-12">
         <div class="text-center py-5">
-            <i class="fas fa-search" style="font-size: 48px; opacity: 0.5;"></i>
+            <i class="fas fa-search catalog-empty-icon"></i>
             <p class="mt-3">Карточки не найдены</p>
         </div>
     </div>

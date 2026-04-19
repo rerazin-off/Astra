@@ -1,53 +1,19 @@
-document.querySelectorAll('.rarity-badge').forEach(badge => {
-    const color = badge.dataset.color;
-    badge.style.background = color;
-});
-// static/module_project/js/main.js
+// Цвета бейджей из data-badge-bg / data-color (без Django внутри style="" — так спокойнее линтеру HTML/CSS)
+window.applyBadgeBackgrounds = function (root) {
+    var scope = root || document;
+    scope.querySelectorAll('[data-badge-bg]').forEach(function (el) {
+        var c = el.getAttribute('data-badge-bg');
+        if (c) el.style.backgroundColor = c;
+    });
+    scope.querySelectorAll('.rarity-badge[data-color]').forEach(function (el) {
+        var c = el.getAttribute('data-color');
+        if (c) el.style.backgroundColor = c;
+    });
+};
 
 document.addEventListener('DOMContentLoaded', function() {
-    const filterForm = document.getElementById('filter-form');
-    const cardsContainer = document.querySelector('.row.g-4'); // Контейнер с картами
-    const paginationContainer = document.querySelector('.pagination'); // Контейнер пагинации
+    if (window.applyBadgeBackgrounds) window.applyBadgeBackgrounds(document);
 
-    if (filterForm) {
-        filterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(filterForm);
-            const searchParams = new URLSearchParams(formData).toString();
-            
-            // Показываем индикатор загрузки
-            cardsContainer.style.opacity = '0.5';
-            
-            fetch(`?${searchParams}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Обновляем HTML карточек
-                cardsContainer.innerHTML = data.cards_html;
-                
-                // Обновляем пагинацию если она есть
-                if (paginationContainer) {
-                    paginationContainer.innerHTML = data.pagination_html || '';
-                }
-                
-                // Обновляем URL без перезагрузки
-                window.history.pushState(null, '', `?${searchParams}`);
-            })
-            .catch(error => console.error('Error:', error))
-            .finally(() => {
-                cardsContainer.style.opacity = '1';
-            });
-        });
-    }
-});
-// main.js - Общие функции для всего приложения
-
-document.addEventListener('DOMContentLoaded', function() {
-    
     // Автоматическое скрытие алертов через 5 секунд
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {

@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from django.db import models
-from django.contrib.auth.models import User 
 # Create your models here.
 
 class Attribute(models.Model):
@@ -207,11 +206,11 @@ class Cards(models.Model):
     )
     
     author = models.ForeignKey(
-        User, 
-        on_delete=models.SET_NULL,  
+        'Users_System',
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='cards',
+        related_name='authored_cards',
         verbose_name="Автор карточки"
     )
     

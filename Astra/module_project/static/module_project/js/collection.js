@@ -118,6 +118,21 @@
             linkEl.href = '/card/' + data.card_id + '/';
         }
 
+        const refundHint = document.getElementById('collection-modal-refund-hint');
+        if (refundHint) {
+            var pp = data.price_points != null ? Number(data.price_points) : 0;
+            refundHint.textContent =
+                'При удалении одной копии карты на счёт вернётся ' +
+                pp +
+                ' очков (стоимость карты по каталогу).';
+        }
+
+        const deleteBtn = document.getElementById('collection-modal-delete-btn');
+        if (deleteBtn) {
+            deleteBtn.classList.remove('d-none');
+            deleteBtn.dataset.inventoryId = String(inventoryId);
+        }
+
         document.getElementById('collectionCardModalLabel').textContent = data.title || 'Карточка';
 
         const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
@@ -141,7 +156,8 @@
 
             let filtered = items.filter(function (item) {
                 const titleMatch = (item.dataset.title || '').includes(searchTerm);
-                const rarityMatch = !rarityValue || (item.dataset.rarity || '') === rarityValue;
+                const cardRid = String(item.dataset.rarityId || '');
+                const rarityMatch = !rarityValue || cardRid === String(rarityValue);
                 return titleMatch && rarityMatch;
             });
 
@@ -155,14 +171,8 @@
                     case 'power':
                         return parseInt(b.dataset.power || '0', 10) - parseInt(a.dataset.power || '0', 10);
                     case 'rarity': {
-                        const rarityOrder = {
-                            Легендарная: 4,
-                            Эпическая: 3,
-                            Редкая: 2,
-                            Обычная: 1,
-                        };
-                        const ra = rarityOrder[a.dataset.rarity] || 0;
-                        const rb = rarityOrder[b.dataset.rarity] || 0;
+                        const ra = parseInt(a.dataset.rarityOrder || '0', 10);
+                        const rb = parseInt(b.dataset.rarityOrder || '0', 10);
                         return rb - ra;
                     }
                     default:
@@ -185,6 +195,8 @@
                     container.appendChild(item.cloneNode(true));
                 });
             }
+
+            if (window.applyBadgeBackgrounds) window.applyBadgeBackgrounds(container);
 
             const totalEl = document.getElementById('collection-total-count');
             if (totalEl) {
@@ -255,6 +267,54 @@
             if (viewButton) {
                 viewButton.click();
             }
+        }
+
+        const deleteFromCollectionBtn = document.getElementById('collection-modal-delete-btn');
+        if (deleteFromCollectionBtn) {
+            deleteFromCollectionBtn.addEventListener('click', function () {
+                const invId = this.dataset.inventoryId;
+                if (!invId) return;
+                if (!confirm('Удалить одну копию этой карты из коллекции? Стоимость карты будет зачислена на счёт.')) {
+                    return;
+                }
+                const tokenInput = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (!tokenInput || !tokenInput.value) {
+                    alert('Не удалось получить CSRF. Обновите страницу.');
+                    return;
+                }
+                fetch('/collection/remove/' + invId + '/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': tokenInput.value,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    credentials: 'same-origin',
+                })
+                    .then(function (r) {
+                        return r.json().then(function (data) {
+                            return { ok: r.ok, data: data };
+                        });
+                    })
+                    .then(function (result) {
+                        if (result.data && result.data.ok) {
+                            if (typeof window.showNotification === 'function') {
+                                window.showNotification(
+                                    'Возвращено очков: ' +
+                                        result.data.refund +
+                                        '. Текущий баланс: ' +
+                                        result.data.current_points,
+                                    'success'
+                                );
+                            }
+                            window.location.reload();
+                        } else {
+                            alert((result.data && result.data.error) || 'Не удалось удалить');
+                        }
+                    })
+                    .catch(function () {
+                        alert('Ошибка сети');
+                    });
+            });
         }
     });
 })();

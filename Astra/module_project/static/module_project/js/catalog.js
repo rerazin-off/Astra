@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Обновляем HTML карточек
             if (cardsContainer) {
                 cardsContainer.innerHTML = data.cards_html;
+                if (window.applyBadgeBackgrounds) window.applyBadgeBackgrounds(cardsContainer);
             }
             
             // Обновляем пагинацию
@@ -108,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (cardsContainer) {
                         cardsContainer.innerHTML = data.cards_html;
+                        if (window.applyBadgeBackgrounds) window.applyBadgeBackgrounds(cardsContainer);
                     }
                     if (paginationContainer) {
                         paginationContainer.innerHTML = data.pagination_html || '';

@@ -2,8 +2,10 @@
 from django.db import transaction as db_transaction
 
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_POST
+from django.template.loader import render_to_string
+from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from django.db.models import Q
@@ -131,46 +133,78 @@ def profile_edit(request):
     
     return render(request, 'module_project/profile_edit.html', {'form': form, 'user': user})
 
-@login_required
 def create_card(request):
+    """Создание карточки: автор — текущий пользователь Users_System (сессия)."""
+    if 'user_id' not in request.session:
+        messages.warning(request, 'Войдите в систему, чтобы создать карточку')
+        return redirect('module_project:login')
+
+    site_user = Users_System.objects.get(id=request.session['user_id'])
+
     if request.method == 'POST':
         form = CardForm(request.POST, request.FILES)
         if form.is_valid():
-            # Автоматическое назначение автора
             card = form.save(commit=False)
-            card.author = request.user
+            card.author = site_user
             card.save()
             messages.success(request, 'Карта успешно создана!')
-            return redirect('module_project:card_detail', pk=card.pk)
+            return redirect('module_project:card_detail', card_id=card.pk)
     else:
         form = CardForm()
-    return render(request, 'module_project/create_card.html', {'form': form})
+
+    return render(request, 'module_project/create_card.html', {
+        'form': form,
+        'user': site_user,
+    })
 
 
 def card_catalog(request):
-    """Каталог всех карточек"""
-    cards = Cards.objects.filter(is_active=True).select_related('rarity', 'attribute', 'author')
-    
-    # Фильтрация
+    """Каталог всех карточек (с пагинацией; AJAX — JSON с HTML-фрагментами для фильтров)."""
+    cards_qs = Cards.objects.filter(is_active=True).select_related(
+        'rarity', 'attribute', 'author'
+    ).order_by('-created_at')
+
     rarity_id = request.GET.get('rarity')
     attribute_id = request.GET.get('attribute')
-    search = request.GET.get('search', '')
-    
+    search = (request.GET.get('search') or '').strip()
+
     if rarity_id:
-        cards = cards.filter(rarity_id=rarity_id)
+        cards_qs = cards_qs.filter(rarity_id=rarity_id)
     if attribute_id:
-        cards = cards.filter(attribute_id=attribute_id)
+        cards_qs = cards_qs.filter(attribute_id=attribute_id)
     if search:
-        cards = cards.filter(Q(title__icontains=search) | Q(description__icontains=search))
-    
+        cards_qs = cards_qs.filter(
+            Q(title__icontains=search) | Q(description__icontains=search)
+        )
+
+    paginator = Paginator(cards_qs, 12)
+    page_obj = paginator.get_page(request.GET.get('page') or 1)
+
     rarities = Rarity.objects.all()
     attributes = Attribute.objects.filter(is_active=True)
-    
+
     context = {
-        'cards': cards,
+        'cards': page_obj,
         'rarities': rarities,
         'attributes': attributes,
     }
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        cards_html = render_to_string(
+            'module_project/includes/card_grid.html',
+            {'cards': page_obj},
+            request=request,
+        )
+        pagination_html = render_to_string(
+            'module_project/includes/pagination.html',
+            {'cards': page_obj, 'request': request},
+            request=request,
+        )
+        return JsonResponse({
+            'cards_html': cards_html,
+            'pagination_html': pagination_html,
+        })
+
     return render(request, 'module_project/card_catalog.html', context)
 
 def card_detail(request, card_id):
@@ -324,9 +358,6 @@ def my_collection(request):
     attributes = Attribute.objects.filter(is_active=True)
 
     total_count = inventory.count()
-    legendary_count = inventory.filter(card__rarity__name__icontains='легенд').count()
-    epic_count = inventory.filter(card__rarity__name__icontains='эпич').count()
-    rare_count = inventory.filter(card__rarity__name__icontains='редк').count()
 
     collection_cards_payload = []
     for inv in inventory:
@@ -348,6 +379,7 @@ def my_collection(request):
             'defence': c.defence or 0,
             'obtained_at': inv.obtained_at.isoformat() if inv.obtained_at else '',
             'quantity': inv.quantity,
+            'price_points': c.price_points or 0,
         })
 
     context = {
@@ -356,12 +388,44 @@ def my_collection(request):
         'rarities': rarities,
         'attributes': attributes,
         'total_count': total_count,
-        'legendary_count': legendary_count,
-        'epic_count': epic_count,
-        'rare_count': rare_count,
         'collection_cards_payload': collection_cards_payload,
     }
     return render(request, 'module_project/my_collection.html', context)
+
+
+@require_POST
+def remove_inventory_card(request, inventory_id):
+    """Удалить одну единицу карты из инвентаря и вернуть её стоимость в очки."""
+    if 'user_id' not in request.session:
+        return JsonResponse({'ok': False, 'error': 'Требуется вход'}, status=401)
+
+    user = get_object_or_404(Users_System, id=request.session['user_id'])
+    inv = get_object_or_404(
+        User_Inventory.objects.select_related('card'),
+        id=inventory_id,
+        user=user,
+    )
+    card = inv.card
+    refund = int(card.price_points or 0)
+
+    with db_transaction.atomic():
+        if inv.quantity > 1:
+            inv.quantity -= 1
+            inv.save(update_fields=['quantity'])
+            removed_fully = False
+        else:
+            inv.delete()
+            removed_fully = True
+        user.current_points = (user.current_points or 0) + refund
+        user.save(update_fields=['current_points'])
+
+    return JsonResponse({
+        'ok': True,
+        'refund': refund,
+        'current_points': user.current_points,
+        'removed_fully': removed_fully,
+    })
+
 
 def edit_card(request, card_id):
     return HttpResponse(f"Редактирование карточки {card_id} - в разработке")

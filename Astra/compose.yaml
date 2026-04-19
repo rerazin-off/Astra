@@ -1,8 +1,36 @@
+# Сайт: http://localhost:${HOST_PORT:-8000}
+# Если «port is already allocated»: освободите 8000 или задайте HOST_PORT=8001 в .env
+# Старые контейнеры: docker compose down --remove-orphans
 services:
-  astra:
-    image: astra
+  web:
     build:
       context: .
       dockerfile: ./Dockerfile
+    restart: unless-stopped
+    environment:
+      DJANGO_DB_PATH: /data/db.sqlite3
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,web
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
+    volumes:
+      - django_data:/data
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    expose:
+      - "8090"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
     ports:
-      - 8090:8090
+      - "${HOST_PORT:-8000}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_volume:/staticfiles:ro
+      - media_volume:/media:ro
+    depends_on:
+      - web
+
+volumes:
+  django_data:
+  static_volume:
+  media_volume:

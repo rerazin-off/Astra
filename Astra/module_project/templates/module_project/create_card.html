@@ -35,8 +35,8 @@
                                     <i class="fas fa-image me-1"></i>Обложка
                                 </label>
                                 {{ form.cover_image }}
-                                <div id="image-preview" class="mt-2" style="display: none;">
-                                    <img id="preview-img" src="#" alt="Preview" style="max-width: 100%; max-height: 150px; border-radius: 10px;">
+                                <div id="image-preview" class="mt-2 d-none">
+                                    <img id="preview-img" src="#" alt="Preview" class="cover-preview-thumb">
                                 </div>
                                 {% if form.cover_image.errors %}
                                     <div class="text-danger small">{{ form.cover_image.errors.0 }}</div>
@@ -139,7 +139,7 @@
                             <a href="{% url 'module_project:card_catalog' %}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-2"></i>Назад в каталог
                             </a>
-                            <button type="submit" class="cosmic-btn" style="width: auto; padding: 12px 40px;">
+                            <button type="submit" class="cosmic-btn cosmic-btn--inline">
                                 <i class="fas fa-plus-circle me-2"></i>Создать карточку
                             </button>
                         </div>
@@ -160,11 +160,11 @@ document.getElementById('{{ form.cover_image.id_for_label }}').addEventListener(
         const reader = new FileReader();
         reader.onload = function(e) {
             previewImg.src = e.target.result;
-            preview.style.display = 'block';
+            preview.classList.remove('d-none');
         }
         reader.readAsDataURL(this.files[0]);
     } else {
-        preview.style.display = 'none';
+        preview.classList.add('d-none');
     }
 });
 
