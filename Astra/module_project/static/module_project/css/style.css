@@ -1,11 +1,6 @@
-/* ===========================================
-   КОСМИЧЕСКАЯ ККИ - ОСНОВНЫЕ СТИЛИ
-   =========================================== */
 
-/* ----- ИМПОРТ ШРИФТОВ ----- */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
 
-/* ----- CSS ПЕРЕМЕННЫЕ — тёмная гримуарная фиолетовая тема ----- */
 :root {
     --primary-color: #a855f7;
     --primary-deep: #7c3aed;
@@ -401,7 +396,6 @@ a:hover {
     transform: translateY(-2px);
 }
 
-/* Кнопки в стиле коллекции / гримуара */
 .btn-mystic-accent {
     display: inline-flex;
     align-items: center;
