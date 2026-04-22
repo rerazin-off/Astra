@@ -25,6 +25,7 @@ SECRET_KEY = os.environ.get(
     'django-insecure-jwsljfs$7dzstpj@cp2g-s0xko)_zir#r=jp^ph8&rqs971g01',
 )
 
+WHITENOISE_KEEP_ONLY_HASHED_FILES = False
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
@@ -73,6 +74,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -98,7 +100,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Astra.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
