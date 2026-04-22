@@ -1,4 +1,3 @@
-// collection.js — коллекция: фильтры, сортировка, модальное окно карты
 
 (function () {
     function debounce(fn, ms) {
@@ -44,7 +43,7 @@
         div.textContent = s;
         return div.innerHTML;
     }
-
+    //модалка для карточек в каталоге
     function openCollectionModal(inventoryId, payloadById) {
         const data = payloadById[String(inventoryId)];
         if (!data) return;
@@ -66,7 +65,7 @@
         const linkEl = document.getElementById('collection-modal-detail-link');
 
         if (titleEl) titleEl.textContent = data.title || '';
-
+        //закидывает инфу в модалку и цвет берет из базы
         if (badgesEl) {
             badgesEl.innerHTML = '';
             if (data.rarity_name) {
@@ -237,17 +236,7 @@
             }
         });
 
-        document.addEventListener('keydown', function (e) {
-            if (e.key !== 'Enter' && e.key !== ' ') return;
-            const tile = e.target.closest('.collection-card-tile');
-            if (!tile || !container.contains(tile)) return;
-            if (e.target.closest('a') || e.target.closest('button')) return;
-            e.preventDefault();
-            const wrap = tile.closest('.collection-item');
-            const id = wrap && wrap.getAttribute('data-inventory-id');
-            if (id) openCollectionModal(id, payloadById);
-        });
-
+        
         const viewButtons = document.querySelectorAll('[data-view]');
         viewButtons.forEach(function (button) {
             button.addEventListener('click', function () {
@@ -277,11 +266,7 @@
                 if (!confirm('Удалить одну копию этой карты из коллекции? Стоимость карты будет зачислена на счёт.')) {
                     return;
                 }
-                const tokenInput = document.querySelector('[name=csrfmiddlewaretoken]');
-                if (!tokenInput || !tokenInput.value) {
-                    alert('Не удалось получить CSRF. Обновите страницу.');
-                    return;
-                }
+                
                 fetch('/collection/remove/' + invId + '/', {
                     method: 'POST',
                     headers: {

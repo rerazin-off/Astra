@@ -100,7 +100,6 @@
                             </div>
                         </div>
 
-                        {# Исправлено: используем if с else вместо сложных условий в атрибутах #}
                         {% if user.current_points >= 100 %}
                         <button type="submit" class="cosmic-btn mt-4">
                             <i class="fas fa-dice me-2"></i>
@@ -115,7 +114,6 @@
                     </form>
 
                     {% if user.current_points >= 100 %}
-                    {# Достаточно очков - ничего не показываем #}
                     {% else %}
                     <div class="alert alert-warning mt-3">
                         <i class="fas fa-exclamation-triangle me-2"></i>
@@ -178,7 +176,6 @@
             document.querySelector(`input[value="${type}"]`).checked = true;
         }
 
-        // Выбираем первый вариант по умолчанию
         document.querySelector('.gacha-option').classList.add('selected');
     </script>
     <script src="{% static 'module_project/js/main.js' %}" defer></script>

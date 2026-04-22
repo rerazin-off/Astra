@@ -8,10 +8,12 @@ from django.template.loader import render_to_string
 from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
+from .models import Battle_History
 from django.db.models import Q
 from .models import Users_System, User_Inventory, Cards, Rarity, Gacha_History, Attribute
 from .forms import UsersSystemForm, UserProfileForm, AddPointsForm, CardForm, GachaForm
 import random
+from .models import Gacha_History
 def home(request):
     """Временная заглушка для главной страницы"""
     return HttpResponse("""
@@ -72,13 +74,11 @@ def dashboard(request):
     favorite_cards = User_Inventory.objects.filter(user=user, is_favorite=True).count()
     equipped_cards = User_Inventory.objects.filter(user=user, is_equipped=True).count()
     
-    from .models import Battle_History
     recent_battles = Battle_History.objects.filter(user=user)[:5]
-    wins = Battle_History.objects.filter(user=user, is_victory=True).count()
-    total_battles = Battle_History.objects.filter(user=user).count()
+    wins = 0
+    total_battles = 0
     win_rate = (wins / total_battles * 100) if total_battles > 0 else 0
     
-    from .models import Gacha_History
     recent_gacha = Gacha_History.objects.filter(user=user).select_related('card')[:5]
     
     points_form = AddPointsForm()
@@ -134,7 +134,6 @@ def profile_edit(request):
     return render(request, 'module_project/profile_edit.html', {'form': form, 'user': user})
 
 def create_card(request):
-    """Создание карточки: автор — текущий пользователь Users_System (сессия)."""
     if 'user_id' not in request.session:
         messages.warning(request, 'Войдите в систему, чтобы создать карточку')
         return redirect('module_project:login')
@@ -159,7 +158,6 @@ def create_card(request):
 
 
 def card_catalog(request):
-    """Каталог всех карточек (с пагинацией; AJAX — JSON с HTML-фрагментами для фильтров)."""
     cards_qs = Cards.objects.filter(is_active=True).select_related(
         'rarity', 'attribute', 'author'
     ).order_by('-created_at')
@@ -208,7 +206,6 @@ def card_catalog(request):
     return render(request, 'module_project/card_catalog.html', context)
 
 def card_detail(request, card_id):
-    """Детальная информация о карточке"""
     card = get_object_or_404(Cards, id=card_id)
     
     has_card = False
@@ -224,7 +221,6 @@ def card_detail(request, card_id):
     }
     return render(request, 'module_project/card_detail.html', context)
 def gacha(request):
-    """Система гачи (выбивание карточек)"""
     if 'user_id' not in request.session:
         messages.warning(request, 'Войдите в систему')
         return redirect('module_project:login')
@@ -237,7 +233,6 @@ def gacha(request):
         if form.is_valid():
             gacha_type = form.cleaned_data['gacha_type']
             
-            # Определяем количество открытий и стоимость
             if gacha_type == 'single':
                 pulls = 1
                 cost = 100
@@ -296,7 +291,7 @@ def gacha(request):
                 card = obtained_cards[0]
                 messages.success(request, f'Вы получили: {card.title} ({card.rarity.name if card.rarity else "Обычная"})!')
             else:
-                messages.success(request, f'Открыто {pulls} карточек! Новых: {len(new_cards)}, всего уникальных: {len(unique_cards)}')
+                messages.success(request, f'Открыто {pulls} карточек!')
             
             request.session['last_gacha_result'] = {
                 'cards': [{
@@ -322,7 +317,6 @@ def gacha(request):
     return render(request, 'module_project/gacha.html', context)
 
 def gacha_result(request):
-    """Страница с результатами гачи"""
     if 'user_id' not in request.session:
         return redirect('module_project:login')
     
@@ -335,7 +329,6 @@ def gacha_result(request):
     return render(request, 'module_project/gacha_result.html', {'result': result})
 
 def my_collection(request):
-    """Моя коллекция карточек"""
     if 'user_id' not in request.session:
         return redirect('module_project:login')
     

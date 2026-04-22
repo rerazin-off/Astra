@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-# Тома Docker часто root:root; SQLite и collectstatic должны писать от appuser.
 mkdir -p /data /app/media /app/static
 chown -R appuser:appuser /data /app/staticfiles /app/media /app/static 2>/dev/null || true
 exec runuser -u appuser -- sh -c '

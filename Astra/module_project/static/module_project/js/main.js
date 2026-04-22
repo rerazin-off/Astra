@@ -1,4 +1,4 @@
-// Цвета бейджей из data-badge-bg / data-color (без Django внутри style="" — так спокойнее линтеру HTML/CSS)
+
 window.applyBadgeBackgrounds = function (root) {
     var scope = root || document;
     scope.querySelectorAll('[data-badge-bg]').forEach(function (el) {
@@ -14,7 +14,6 @@ window.applyBadgeBackgrounds = function (root) {
 document.addEventListener('DOMContentLoaded', function() {
     if (window.applyBadgeBackgrounds) window.applyBadgeBackgrounds(document);
 
-    // Автоматическое скрытие алертов через 5 секунд
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
@@ -23,24 +22,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
     
-    // Активация всех всплывающих подсказок
     const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     tooltips.forEach(tooltip => {
         new bootstrap.Tooltip(tooltip);
     });
     
-    // Активация всех поповеров
     const popovers = document.querySelectorAll('[data-bs-toggle="popover"]');
     popovers.forEach(popover => {
         new bootstrap.Popover(popover);
     });
     
-    // Функция для форматирования чисел
     window.formatNumber = function(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     };
     
-    // Функция для отображения уведомлений
     window.showNotification = function(message, type = 'info') {
         const notificationContainer = document.createElement('div');
         notificationContainer.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
@@ -59,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     };
     
-    // Подтверждение удаления
     const deleteButtons = document.querySelectorAll('[data-confirm]');
     deleteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
@@ -70,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Мобильное меню - автоматическое закрытие при клике
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
     const navbarCollapse = document.querySelector('.navbar-collapse');
     
@@ -83,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Ленивая загрузка изображений
     const lazyImages = document.querySelectorAll('img[data-src]');
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -99,14 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         lazyImages.forEach(img => imageObserver.observe(img));
     } else {
-        // Fallback для старых браузеров
-        lazyImages.forEach(img => {
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-        });
     }
     
-    // Анимация счетчиков
     const counters = document.querySelectorAll('[data-count]');
     counters.forEach(counter => {
         const target = parseInt(counter.dataset.count);
@@ -137,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Функция для AJAX запросов
 window.ajaxRequest = function(url, method = 'GET', data = null) {
     const options = {
         method: method,
@@ -165,7 +150,6 @@ window.ajaxRequest = function(url, method = 'GET', data = null) {
         });
 };
 
-// Функция для получения CSRF токена
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -181,7 +165,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Дебаунс функция для оптимизации поиска
 window.debounce = function(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -194,7 +177,6 @@ window.debounce = function(func, wait) {
     };
 };
 
-// Показать индикатор загрузки
 window.showLoader = function() {
     const loader = document.getElementById('loading-indicator');
     if (loader) {
@@ -202,7 +184,6 @@ window.showLoader = function() {
     }
 };
 
-// Скрыть индикатор загрузки
 window.hideLoader = function() {
     const loader = document.getElementById('loading-indicator');
     if (loader) {

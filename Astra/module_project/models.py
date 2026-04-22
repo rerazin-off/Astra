@@ -7,7 +7,7 @@ from django.db import models
 
 class Attribute(models.Model):
     """
-    Модель атрибутов карточек (стихии/типы)
+    Атрибуты карточки типо: вода, земля и тд.
     """
     name = models.CharField(
         max_length=50,
@@ -58,9 +58,6 @@ class Attribute(models.Model):
             self.color = '#' + self.color
         super().save(*args, **kwargs)
 class Users_System(models.Model):
-    """
-    Модель для хранения информации о пользователях.
-    """
     nikname = models.CharField(
         max_length=100, 
         verbose_name="Никнейм",
@@ -106,9 +103,6 @@ class Users_System(models.Model):
 
 
 class Rarity(models.Model):
-    """
-    Модель редкости карточек (добавлена для баланса)
-    """
     name = models.CharField(
         max_length=50,
         verbose_name="Название редкости"
@@ -142,9 +136,6 @@ class Rarity(models.Model):
 
 
 class Cards(models.Model):
-    """
-    Модель карточки
-    """
     title = models.CharField(
         max_length=100,
         verbose_name="Название карточки"
@@ -182,7 +173,7 @@ class Cards(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(9999)]
     )
     attribute = models.ForeignKey(
-        Attribute, # type: ignore
+        Attribute,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -234,9 +225,7 @@ class Cards(models.Model):
 
 
 class User_Inventory(models.Model):
-    """
-    Модель инвентаря пользователя (карточки, принадлежащие пользователю)
-    """
+
     user = models.ForeignKey(
         Users_System,
         on_delete=models.CASCADE,
@@ -276,34 +265,29 @@ class User_Inventory(models.Model):
     class Meta:
         verbose_name = "Карточка в инвентаре"
         verbose_name_plural = "Карточки в инвентаре"
-        unique_together = ['user', 'card']  # Пользователь не может иметь две одинаковые карточки
+        unique_together = ['user', 'card'] 
         ordering = ['-obtained_at']
     
     def __str__(self):
         return f"{self.user.nikname} - {self.card.title} (x{self.quantity})"
     
     def use_card(self):
-        """Использовать карточку в бою"""
         self.times_used += 1
         self.last_used_at = timezone.now()
         self.save()
     
     def win_with_card(self):
-        """Победа с использованием этой карточки"""
         self.times_won += 1
         self.use_card()
     
     def get_win_rate(self):
-        """Процент побед с карточкой"""
         if self.times_used == 0:
             return 0
         return (self.times_won / self.times_used) * 100
 
 
 class Battle_History(models.Model):
-    """
-    История боев пользователя
-    """
+
     user = models.ForeignKey(
         Users_System,
         on_delete=models.CASCADE,
@@ -359,9 +343,6 @@ class Battle_History(models.Model):
 
 
 class Gacha_History(models.Model):
-    """
-    История открытия гачи
-    """
     user = models.ForeignKey(
         Users_System,
         on_delete=models.CASCADE,

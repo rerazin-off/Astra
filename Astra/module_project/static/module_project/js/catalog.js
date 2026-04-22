@@ -1,4 +1,3 @@
-// catalog.js - Функции для страницы каталога карт
 
 document.addEventListener('DOMContentLoaded', function() {
     const filterForm = document.getElementById('filter-form');
@@ -8,18 +7,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const cardsContainer = document.getElementById('cards-container');
     const paginationContainer = document.getElementById('pagination-container');
     const loadingIndicator = document.getElementById('loading-indicator');
-    
-    // Если мы не на странице каталога - выходим
+    //фильтрация и обновление каталога при изменениях, без загрузки страницы
     if (!filterForm) return;
     
     let searchTimeout;
     
-    // Функция для выполнения AJAX-запроса
     function applyFilters() {
         const formData = new FormData(filterForm);
         const searchParams = new URLSearchParams(formData).toString();
         
-        // Показываем индикатор загрузки
         if (loadingIndicator) loadingIndicator.style.display = 'block';
         if (cardsContainer) cardsContainer.style.opacity = '0.5';
         
@@ -30,21 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            // Обновляем HTML карточек
             if (cardsContainer) {
                 cardsContainer.innerHTML = data.cards_html;
                 if (window.applyBadgeBackgrounds) window.applyBadgeBackgrounds(cardsContainer);
             }
             
-            // Обновляем пагинацию
             if (paginationContainer) {
                 paginationContainer.innerHTML = data.pagination_html || '';
             }
             
-            // Обновляем URL без перезагрузки
             window.history.pushState(null, '', `?${searchParams}`);
-            
-            // Показываем уведомление о количестве найденных карт
             const cardCount = document.querySelectorAll('.card-item').length;
             if (cardCount === 0) {
                 showNotification('Карты не найдены. Попробуйте изменить параметры поиска.', 'info');
@@ -61,15 +52,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (cardsContainer) cardsContainer.style.opacity = '1';
         });
     }
-    
-    // Обработчики событий для фильтров
+
     if (filterForm) {
         filterForm.addEventListener('submit', function(e) {
             e.preventDefault();
             applyFilters();
         });
-        
-        // Мгновенная фильтрация при вводе в поиск (с задержкой)
+    
         if (searchInput) {
             searchInput.addEventListener('input', function() {
                 clearTimeout(searchTimeout);
@@ -78,8 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 500);
             });
         }
-        
-        // Мгновенная фильтрация при изменении селектов
+    
         if (raritySelect) {
             raritySelect.addEventListener('change', applyFilters);
         }
@@ -89,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Обработка кликов по пагинации (делегирование событий)
     document.addEventListener('click', function(e) {
         const pageLink = e.target.closest('.page-link');
         if (pageLink) {
@@ -116,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     window.history.pushState(null, '', pageUrl);
                     
-                    // Плавная прокрутка к началу каталога
                     window.scrollTo({
                         top: cardsContainer.offsetTop - 100,
                         behavior: 'smooth'
@@ -134,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Функция для сброса фильтров
     const resetButton = document.getElementById('reset-filters');
     if (resetButton) {
         resetButton.addEventListener('click', function() {
@@ -145,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Сохранение фильтров в localStorage
     function saveFilters() {
         const filters = {
             search: searchInput ? searchInput.value : '',
@@ -165,9 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Загружаем сохраненные фильтры
     loadFilters();
     
-    // Сохраняем фильтры перед уходом со страницы
     window.addEventListener('beforeunload', saveFilters);
 });

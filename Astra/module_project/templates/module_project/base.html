@@ -90,7 +90,6 @@
         </div>
     </nav>
 
-    <!-- Системные сообщения -->
     {% if messages %}
         <div class="container mt-3">
             {% for message in messages %}
@@ -102,10 +101,8 @@
         </div>
     {% endif %}
 
-    <!-- Основной контент -->
     {% block content %}{% endblock %}
 
-    <!-- Индикатор загрузки -->
     <div id="loading-indicator">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Загрузка...</span>

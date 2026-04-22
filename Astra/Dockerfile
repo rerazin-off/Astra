@@ -1,5 +1,4 @@
-# Образ приложения: Gunicorn слушает 8090 (снаружи — через nginx в compose).
-# Старт от root: chown томов под appuser (иначе SQLite на /data падает с «unable to open database file»).
+
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
