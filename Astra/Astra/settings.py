@@ -47,6 +47,7 @@ CSRF_TRUSTED_ORIGINS.extend([
     'https://*.ngrok.io',
     'https://uncoddled-miquel-wabbly.ngrok-free.dev//*',
     'https://astra-production-dd5f.up.railway.app',
+    'https://astra-4g65.onrender.com',
 ])
 
 ALLOWED_HOSTS.extend([
@@ -54,6 +55,7 @@ ALLOWED_HOSTS.extend([
     '.ngrok-free.dev',
     '.ngrok.io',
     'astra-production-dd5f.up.railway.app',
+    'astra-4g65.onrender.com',
 ])
 
 
