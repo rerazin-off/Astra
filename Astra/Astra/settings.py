@@ -142,7 +142,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
