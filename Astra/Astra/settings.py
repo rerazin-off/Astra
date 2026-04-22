@@ -24,7 +24,7 @@ SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
     'django-insecure-jwsljfs$7dzstpj@cp2g-s0xko)_zir#r=jp^ph8&rqs971g01',
 )
-
+WHITENOISE_MEDIA_PREFIX = '/media/'
 WHITENOISE_KEEP_ONLY_HASHED_FILES = False
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
