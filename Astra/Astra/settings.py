@@ -26,7 +26,6 @@ SECRET_KEY = os.environ.get(
 )
 WHITENOISE_MEDIA_PREFIX = '/media/'
 WHITENOISE_KEEP_ONLY_HASHED_FILES = False
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
 ALLOWED_HOSTS = [
@@ -101,9 +100,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Astra.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -148,10 +144,10 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
-# Пустая папка в репозитории не обязательна: без неё collectstatic только из приложений.
+STATIC_URL = '/static/'
 _project_static = BASE_DIR / 'static'
 STATICFILES_DIRS = [_project_static] if _project_static.is_dir() else []
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# Allow mounting a persistent volume in production (e.g. /data/media on Railway/Render).
+MEDIA_ROOT = Path(os.environ.get('DJANGO_MEDIA_ROOT', str(BASE_DIR / 'media')))
