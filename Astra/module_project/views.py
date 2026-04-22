@@ -211,7 +211,6 @@ def card_detail(request, card_id):
     """Детальная информация о карточке"""
     card = get_object_or_404(Cards, id=card_id)
     
-    # Проверяем, есть ли у пользователя эта карточка
     has_card = False
     if 'user_id' in request.session:
         has_card = User_Inventory.objects.filter(

@@ -1,6 +1,3 @@
-# Сайт: http://localhost:${HOST_PORT:-8000}
-# Если «port is already allocated»: освободите 8000 или задайте HOST_PORT=8001 в .env
-# Старые контейнеры: docker compose down --remove-orphans
 services:
   web:
     build:
